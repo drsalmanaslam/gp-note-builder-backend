@@ -1,0 +1,23 @@
+{
+  "id": 1,
+  "title": "Test Template",
+  "description": "This is a test template for sharing",
+  "category": "Cardiovascular",
+  "content": {
+    "sections": [
+      {
+        "title": "Introduction",
+        "body": "Welcome to the test template"
+      },
+      {
+        "title": "Main Content",
+        "body": "This is the main content section"
+      }
+    ]
+  },
+  "version": 1,
+  "created_at": "2026-07-01T09:09:06.405769+01:00",
+  "updated_at": "2026-07-01T09:13:56.308677+01:00",
+  "created_by": "admin",
+  "is_public": true
+}

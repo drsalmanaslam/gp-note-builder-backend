@@ -1,0 +1,46 @@
+--only-binary :all: pydantic-core
+--only-binary :all: psycopg2-binary
+--only-binary :all: asyncpg
+alembic==1.12.1
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anyio==3.7.1
+asyncpg==0.30.0
+bcrypt==5.0.0
+cffi==2.0.0
+charset-normalizer==3.4.7
+click==8.4.2
+colorama==0.4.6
+cryptography==49.0.0
+dnspython==2.8.0
+ecdsa==0.19.2
+email-validator==2.1.0
+fastapi==0.115.6
+greenlet==3.5.3
+h11==0.16.0
+httptools==0.8.0
+idna==3.18
+Mako==1.3.12
+MarkupSafe==3.0.3
+passlib==1.7.4
+pillow==12.3.0
+psycopg2-binary==2.9.12
+pyasn1==0.6.3
+pycparser==3.0
+pydantic==2.10.4
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+python-jose==3.3.0
+python-multipart==0.0.6
+PyYAML==6.0.3
+reportlab==5.0.0
+rsa==4.9.1
+six==1.17.0
+sniffio==1.3.1
+SQLAlchemy==2.0.23
+starlette>=0.40.0,<0.42.0
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+uvicorn==0.34.0
+watchfiles==1.2.0
+websockets==16.0
