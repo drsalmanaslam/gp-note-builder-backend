@@ -49,3 +49,5 @@ uvicorn==0.24.0
 watchfiles==1.2.0
 websockets==16.0
 wrapt==2.2.2
+psycopg2-binary 
+psycopg2-binary 
