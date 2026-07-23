@@ -105,3 +105,17 @@ def seed_all():
             results.append(f"❌ {seed_name}: {str(e)[:50]}")
     
     return {"results": results}
+@app.post("/change-password")
+def change_password(username: str, old_password: str, new_password: str):
+    from app.database import SessionLocal
+    from app.models import User
+    from app.auth import get_password_hash, verify_password
+    db = SessionLocal()
+    user = db.query(User).filter(User.username == username).first()
+    if not user:
+        return {"error": "User not found"}
+    if not verify_password(old_password, user.hashed_password):
+        return {"error": "Old password is incorrect"}
+    user.hashed_password = get_password_hash(new_password)
+    db.commit()
+    return {"message": "Password changed successfully!"}
