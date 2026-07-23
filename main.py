@@ -55,11 +55,11 @@ class CSPMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         response = await call_next(request)
         response.headers["Content-Security-Policy"] = (
-            "default-src 'self'; "
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval'; "
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+            "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; "
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; "
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; "
             "font-src 'self' https://fonts.gstatic.com; "
-            "img-src 'self' data:; "
+            "img-src 'self' data: https://cdn.jsdelivr.net; "
             "connect-src 'self' http://localhost:* https://*.stripe.com https://*.ngrok-free.dev https://*.vercel.app; "
             "frame-src https://*.stripe.com; "
         )
@@ -83,13 +83,35 @@ def read_root():
 def health_check():
     return {"status": "healthy", "server": "running"}
 
-@app.get("/seed-all")
-def seed_all_templates():
-    import subprocess
-    import os
-    seed_files = [f for f in os.listdir('.') if f.startswith('seed_') and f.endswith('.py')]
+@app.get("/seed")
+def seed_essentials():
+    import importlib
     results = []
-    for seed in seed_files:
-        result = subprocess.run(['python', seed], capture_output=True, text=True)
-        results.append(f"{seed}: {result.stdout.strip() or 'done'}")
-    return {"seeded": results}
+    
+    # Seed categories first
+    try:
+        import seed_categories
+        seed_categories.seed_categories()
+        results.append("categories done")
+    except Exception as e:
+        results.append(f"categories error: {e}")
+    
+    # Seed a few key templates
+    seeds_to_try = [
+        'seed_templates',
+        'seed_all_templates',
+    ]
+    
+    for seed_name in seeds_to_try:
+        try:
+            mod = importlib.import_module(seed_name)
+            # Try common function names
+            for func_name in ['seed_templates', 'seed_all', dir(mod)]:
+                if hasattr(mod, func_name) and func_name.startswith('seed'):
+                    getattr(mod, func_name)()
+                    results.append(f"{seed_name} done")
+                    break
+        except Exception as e:
+            results.append(f"{seed_name}: {e}")
+    
+    return {"results": results}
