@@ -5,6 +5,7 @@ import os
 
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./gp_notes.db")
 
+# Only use PostgreSQL if explicitly set
 engine = create_engine(DATABASE_URL, echo=False)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
