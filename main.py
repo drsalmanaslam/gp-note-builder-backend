@@ -83,35 +83,25 @@ def read_root():
 def health_check():
     return {"status": "healthy", "server": "running"}
 
-@app.get("/seed")
-def seed_essentials():
+@app.get("/seed-all")
+def seed_all():
     import importlib
+    import os
     results = []
     
-    # Seed categories first
-    try:
-        import seed_categories
-        seed_categories.seed_categories()
-        results.append("categories done")
-    except Exception as e:
-        results.append(f"categories error: {e}")
+    # Get all seed files
+    seed_files = sorted([f.replace('.py', '') for f in os.listdir('.') if f.startswith('seed_') and f.endswith('.py')])
     
-    # Seed a few key templates
-    seeds_to_try = [
-        'seed_templates',
-        'seed_all_templates',
-    ]
-    
-    for seed_name in seeds_to_try:
+    for seed_name in seed_files:
         try:
             mod = importlib.import_module(seed_name)
-            # Try common function names
-            for func_name in ['seed_templates', 'seed_all', dir(mod)]:
-                if hasattr(mod, func_name) and func_name.startswith('seed'):
-                    getattr(mod, func_name)()
-                    results.append(f"{seed_name} done")
+            # Find the seed function (usually starts with seed_)
+            for attr in dir(mod):
+                if attr.startswith('seed_') and callable(getattr(mod, attr)):
+                    getattr(mod, attr)()
+                    results.append(f"✅ {seed_name}")
                     break
         except Exception as e:
-            results.append(f"{seed_name}: {e}")
+            results.append(f"❌ {seed_name}: {str(e)[:50]}")
     
     return {"results": results}
