@@ -101,3 +101,13 @@ def setup_admin():
         db.commit()
         return {"message": "Admin created! Username: admin, Password: admin123"}
     return {"message": "Admin already exists"}
+@app.get("/seed-all")
+def seed_all_templates():
+    import subprocess
+    import os
+    seed_files = [f for f in os.listdir('.') if f.startswith('seed_') and f.endswith('.py')]
+    results = []
+    for seed in seed_files:
+        result = subprocess.run(['python', seed], capture_output=True, text=True)
+        results.append(f"{seed}: {result.stdout.strip()}")
+    return {"seeded": results}
