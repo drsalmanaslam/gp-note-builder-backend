@@ -81,3 +81,23 @@ def read_root():
 @app.get("/health")
 def health_check():
     return {"status": "healthy", "server": "running"}
+@app.get("/setup")
+def setup_admin():
+    from app.database import SessionLocal
+    from app.models import User
+    from app.auth import get_password_hash
+    db = SessionLocal()
+    admin = db.query(User).filter(User.username == "admin").first()
+    if not admin:
+        admin = User(
+            username="admin",
+            email="admin@gpnotes.com",
+            hashed_password=get_password_hash("admin123"),
+            role="admin",
+            is_active=True,
+            subscription_status="trialing"
+        )
+        db.add(admin)
+        db.commit()
+        return {"message": "Admin created! Username: admin, Password: admin123"}
+    return {"message": "Admin already exists"}
