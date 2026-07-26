@@ -99,3 +99,13 @@ def change_password(username: str, old_password: str, new_password: str):
     user.hashed_password = get_password_hash(new_password)
     db.commit()
     return {"message": "Password changed successfully!"}
+
+@app.get("/public/templates")
+def public_templates():
+    from app.database import SessionLocal
+    from app.models import Template
+    db = SessionLocal()
+    templates = db.query(Template).filter(Template.is_public == True).limit(101).all()
+    titles = [t.title for t in templates]
+    db.close()
+    return {"data": titles}
