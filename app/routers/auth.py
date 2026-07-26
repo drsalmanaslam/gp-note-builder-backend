@@ -72,11 +72,17 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
     hashed_password = get_password_hash(user.password)
     
     db_user = User(
-        username=user.username,
-        email=user.email,
-        full_name=user.full_name,
-        hashed_password=hashed_password
-    )
+    username=user.username,
+    email=user.email,
+    full_name=user.full_name,
+    hashed_password=hashed_password,
+    is_active=True,
+    role="user",
+    subscription_status="trialing",
+    subscription_plan="basic",
+    subscription_started=datetime.now(timezone.utc),
+    subscription_expires=datetime.now(timezone.utc) + timedelta(days=30)
+)
     
     db.add(db_user)
     db.commit()
