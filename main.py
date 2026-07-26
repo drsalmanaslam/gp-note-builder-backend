@@ -11,6 +11,29 @@ import os
 
 # Create tables
 Base.metadata.create_all(bind=engine)
+# Ensure admin has lifetime access
+from app.database import SessionLocal
+from app.models import User
+from app.auth import get_password_hash
+db = SessionLocal()
+admin = db.query(User).filter(User.username == "admin").first()
+if not admin:
+    admin = User(
+        username="admin",
+        email="admin@gpnotes.com",
+        hashed_password=get_password_hash("admin123"),
+        role="admin",
+        is_active=True,
+        subscription_status="active",
+        subscription_plan="enterprise"
+    )
+    db.add(admin)
+else:
+    admin.role = "admin"
+    admin.subscription_status = "active"
+    admin.subscription_plan = "enterprise"
+db.commit()
+db.close()
 
 app = FastAPI(
     title="GP Project API",
