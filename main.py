@@ -12,6 +12,32 @@ import os
 # Create tables
 Base.metadata.create_all(bind=engine)
 
+# Auto-seed templates on first startup (only if database is empty)
+from app.database import SessionLocal
+from app.models import Template
+import importlib
+import os
+
+db_check = SessionLocal()
+existing_templates = db_check.query(Template).count()
+db_check.close()
+
+if existing_templates == 0:
+    print("No templates found. Auto-seeding all 101 templates...")
+    seed_files = sorted([f.replace('.py', '') for f in os.listdir('.') if f.startswith('seed_') and f.endswith('.py')])
+    for seed_name in seed_files:
+        try:
+            mod = importlib.import_module(seed_name)
+            for attr in dir(mod):
+                if attr.startswith('seed_') and callable(getattr(mod, attr)):
+                    getattr(mod, attr)()
+                    break
+        except Exception as e:
+            print(f"❌ {seed_name}: {str(e)[:50]}")
+    print("Auto-seeding complete!")
+else:
+    print(f"{existing_templates} templates already exist. Skipping seed.")
+
 # Ensure admin has lifetime access
 from app.database import SessionLocal
 from app.models import User
