@@ -160,3 +160,29 @@ def public_templates():
     titles = [t.title for t in templates]
     db.close()
     return {"data": titles}
+
+# Template version tracking
+TEMPLATE_VERSION = "1.0"  # Increment this when you update seeds
+
+@app.get("/api/template-version")
+def template_version():
+    return {"version": TEMPLATE_VERSION, "total_templates": 101}
+
+@app.get("/admin/sync-templates")
+def sync_templates():
+    import importlib, os
+    global TEMPLATE_VERSION
+    results = []
+    seed_files = sorted([f.replace('.py', '') for f in os.listdir('.') if f.startswith('seed_') and f.endswith('.py')])
+    for seed_name in seed_files:
+        try:
+            mod = importlib.import_module(seed_name)
+            for attr in dir(mod):
+                if attr.startswith('seed_') and callable(getattr(mod, attr)):
+                    getattr(mod, attr)()
+                    results.append(f"✅ {seed_name}")
+                    break
+        except Exception as e:
+            results.append(f"❌ {seed_name}: {str(e)[:50]}")
+    TEMPLATE_VERSION = str(float(TEMPLATE_VERSION) + 0.1)
+    return {"synced": len(results), "version": TEMPLATE_VERSION}
