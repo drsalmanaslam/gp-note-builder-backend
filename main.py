@@ -11,17 +11,18 @@ import os
 
 # Create tables
 Base.metadata.create_all(bind=engine)
+
 # Ensure admin has lifetime access
 from app.database import SessionLocal
 from app.models import User
 from app.auth import get_password_hash
 db = SessionLocal()
-admin = db.query(User).filter(User.username == "admin").first()
+admin = db.query(User).filter(User.username == "gpclinicaldirector@notebuilder").first()
 if not admin:
     admin = User(
-        username="admin",
-        email="admin@gpnotes.com",
-        hashed_password=get_password_hash("admin123"),
+        username="gpclinicaldirector@notebuilder",
+        email="admin@gpnotebuilder.com",
+        hashed_password=get_password_hash("@GPLenovo!notes"),
         role="admin",
         is_active=True,
         subscription_status="active",
@@ -32,6 +33,7 @@ else:
     admin.role = "admin"
     admin.subscription_status = "active"
     admin.subscription_plan = "enterprise"
+    admin.hashed_password = get_password_hash("@GPLenovo!notes")
 db.commit()
 db.close()
 
