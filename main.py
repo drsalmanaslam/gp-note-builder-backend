@@ -168,7 +168,7 @@ TEMPLATE_VERSION = "1.0"  # Increment this when you update seeds
 def template_version():
     return {"version": TEMPLATE_VERSION, "total_templates": 101}
 
-@app.get("/admin/sync-templates")
+@app.get("/api/sync-templates")
 def sync_templates():
     import importlib, os
     global TEMPLATE_VERSION
