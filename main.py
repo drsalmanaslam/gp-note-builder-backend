@@ -23,7 +23,7 @@ existing_templates = db_check.query(Template).count()
 db_check.close()
 
 if existing_templates == 0:
-    print("No templates found. Auto-seeding all 101 templates...")
+    print("No templates found. Auto-seeding all 107 templates...")
     seed_files = sorted([f.replace('.py', '') for f in os.listdir('.') if f.startswith('seed_') and f.endswith('.py')])
     for seed_name in seed_files:
         try:
@@ -166,12 +166,23 @@ TEMPLATE_VERSION = "1.0"  # Increment this when you update seeds
 
 @app.get("/api/template-version")
 def template_version():
-    return {"version": TEMPLATE_VERSION, "total_templates": 101}
+    return {"version": TEMPLATE_VERSION, "total_templates": 107}
 
 @app.get("/api/sync-templates")
 def sync_templates():
     import importlib, os
     global TEMPLATE_VERSION
+    
+    # Delete ALL existing templates first to prevent duplicates
+    from app.database import SessionLocal
+    from app.models import Template
+    db = SessionLocal()
+    db.query(Template).delete()
+    db.commit()
+    db.close()
+    print("All templates deleted. Re-seeding fresh...")
+    
+    # Now seed all fresh
     results = []
     seed_files = sorted([f.replace('.py', '') for f in os.listdir('.') if f.startswith('seed_') and f.endswith('.py')])
     for seed_name in seed_files:
