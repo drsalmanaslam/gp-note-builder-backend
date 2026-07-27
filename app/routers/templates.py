@@ -147,8 +147,8 @@ def update_template(
     if not db_template:
         raise HTTPException(status_code=404, detail="Template not found")
     
-    if db_template.created_by != current_user.id:
-        raise HTTPException(status_code=403, detail="Access denied")
+    if db_template.created_by != current_user.id and current_user.role != "admin":
+    raise HTTPException(status_code=403, detail="Access denied")
     
     # Save version history
     if template_update.content is not None and template_update.content != db_template.content:
@@ -188,8 +188,8 @@ def delete_template(
     if not db_template:
         raise HTTPException(status_code=404, detail="Template not found")
     
-    if db_template.created_by != current_user.id:
-        raise HTTPException(status_code=403, detail="Access denied")
+    if db_template.created_by != current_user.id and current_user.role != "admin":
+    raise HTTPException(status_code=403, detail="Access denied")
     
     # Soft delete - mark as deleted instead of removing from database
     db_template.deleted_at = datetime.now(timezone.utc)
@@ -346,8 +346,8 @@ def create_share_link(
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
     
-    if template.created_by != current_user.id:
-        raise HTTPException(status_code=403, detail="Access denied")
+    if template.created_by != current_user.id and current_user.role != "admin":
+    raise HTTPException(status_code=403, detail="Access denied")
     
     share_token = secrets.token_urlsafe(32)
     
