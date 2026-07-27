@@ -325,7 +325,7 @@ def get_template_versions(
         raise HTTPException(status_code=404, detail="Template not found")
     
     if template.created_by != current_user.id and current_user.role != "admin":
-    raise HTTPException(status_code=403, detail="Access denied"))
+    raise HTTPException(status_code=403, detail="Access denied")
     
     versions = db.query(TemplateVersion).filter(
         TemplateVersion.template_id == template_id
