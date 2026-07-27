@@ -197,3 +197,13 @@ def sync_templates():
             results.append(f"❌ {seed_name}: {str(e)[:50]}")
     TEMPLATE_VERSION = str(float(TEMPLATE_VERSION) + 0.1)
     return {"synced": len(results), "version": TEMPLATE_VERSION}
+
+@app.get("/public/templates-with-ids")
+def public_templates_with_ids():
+    from app.database import SessionLocal
+    from app.models import Template
+    db = SessionLocal()
+    templates = db.query(Template).filter(Template.is_public == True).all()
+    result = [{"id": t.id, "title": t.title, "category": t.category} for t in templates]
+    db.close()
+    return {"data": result, "total": len(result)}
