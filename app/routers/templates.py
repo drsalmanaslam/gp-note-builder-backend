@@ -82,7 +82,7 @@ def get_template(
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
     
-    if not template.is_public and template.created_by != current_user.id:
+    if not template.is_public and template.created_by != current_user.id and current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Access denied")
     
     template.view_count += 1
@@ -143,40 +143,97 @@ def update_template(
     current_user: User = Depends(get_current_active_user)
 ):
     """Update a template"""
-    db_template = db.query(Template).filter(Template.id == template_id).first()
-    if not db_template:
-        raise HTTPException(status_code=404, detail="Template not found")
-    
-    if db_template.created_by != current_user.id and current_user.role != "admin":
-    	raise HTTPException(status_code=403, detail="Access denied")
-    
-    # Save version history
-    if template_update.content is not None and template_update.content != db_template.content:
-        version = TemplateVersion(
-            template_id=db_template.id,
-            version=db_template.version + 1,
-            content=db_template.content,
-            changes="Updated content"
+    try:
+        # Get template - ADD THIS to check for deleted templates
+        db_template = db.query(Template).filter(
+            Template.id == template_id,
+            Template.deleted_at.is_(None)  # ADD THIS LINE
+        ).first()
+        
+        if not db_template:
+            raise HTTPException(status_code=404, detail="Template not found")
+        
+        # PERMISSION CHECK - UPDATE THIS to use admin email
+        ADMIN_EMAIL = "gpclinicaldirector@notebuilder"  # ADD THIS LINE
+        is_admin = current_user.role == "admin" or current_user.email == ADMIN_EMAIL  # ADD THIS LINE
+        
+        if db_template.created_by != current_user.id and not is_admin:  # CHANGE THIS LINE
+            raise HTTPException(status_code=403, detail="Access denied - you don't own this template")
+        
+        # Track what's being changed for logging - ADD THIS BLOCK
+        changes = []
+        
+        # Save version history if content is changing
+        if template_update.content is not None and template_update.content != db_template.content:
+            version = TemplateVersion(
+                template_id=db_template.id,
+                version=db_template.version + 1,
+                content=db_template.content,
+                changes="Updated content"
+            )
+            db.add(version)
+            db_template.version += 1
+            changes.append("content")  # ADD THIS LINE
+        
+        # Update fields with logging - UPDATE these blocks
+        if template_update.title is not None:
+            old_title = db_template.title  # ADD THIS LINE
+            db_template.title = template_update.title
+            if old_title != template_update.title:  # ADD THIS LINE
+                changes.append("title")  # ADD THIS LINE
+                
+        if template_update.description is not None:
+            old_desc = db_template.description  # ADD THIS LINE
+            db_template.description = template_update.description
+            if old_desc != template_update.description:  # ADD THIS LINE
+                changes.append("description")  # ADD THIS LINE
+                
+        if template_update.category is not None:
+            old_cat = db_template.category  # ADD THIS LINE
+            db_template.category = template_update.category
+            if old_cat != template_update.category:  # ADD THIS LINE
+                changes.append("category")  # ADD THIS LINE
+                
+        if template_update.content is not None:
+            old_content = db_template.content  # ADD THIS LINE
+            db_template.content = template_update.content
+            if old_content != template_update.content:  # ADD THIS LINE
+                changes.append("content")  # ADD THIS LINE
+                
+        if template_update.is_public is not None:
+            old_public = db_template.is_public  # ADD THIS LINE
+            db_template.is_public = template_update.is_public
+            if old_public != template_update.is_public:  # ADD THIS LINE
+                changes.append("is_public")  # ADD THIS LINE
+        
+        # Update timestamp - ADD THIS LINE
+        db_template.updated_at = datetime.now(timezone.utc)
+        
+        # Commit changes
+        db.commit()
+        db.refresh(db_template)
+        
+        # Log activity - ADD THIS BLOCK
+        if changes:
+            activity = UserActivity(
+                user_id=current_user.id,
+                template_id=db_template.id,
+                action="update",
+                details=f"Updated fields: {', '.join(changes)}"
+            )
+            db.add(activity)
+            db.commit()
+        
+        return db_template
+        
+    except HTTPException:  # ADD THIS BLOCK
+        raise
+    except Exception as e:  # ADD THIS BLOCK
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error updating template: {str(e)}"
         )
-        db.add(version)
-        db_template.version += 1
-    
-    # Update fields
-    if template_update.title is not None:
-        db_template.title = template_update.title
-    if template_update.description is not None:
-        db_template.description = template_update.description
-    if template_update.category is not None:
-        db_template.category = template_update.category
-    if template_update.content is not None:
-        db_template.content = template_update.content
-    if template_update.is_public is not None:
-        db_template.is_public = template_update.is_public
-    
-    db.commit()
-    db.refresh(db_template)
-    
-    return db_template
 
 @router.delete("/{template_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_template(
@@ -184,17 +241,24 @@ def delete_template(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user)
 ):
-    db_template = db.query(Template).filter(Template.id == template_id).first()
+    db_template = db.query(Template).filter(
+        Template.id == template_id,
+        Template.deleted_at.is_(None)  # ADD THIS LINE
+    ).first()
+    
     if not db_template:
         raise HTTPException(status_code=404, detail="Template not found")
     
-    if db_template.created_by != current_user.id and current_user.role != "admin":
-    	raise HTTPException(status_code=403, detail="Access denied")
+    # PERMISSION CHECK - UPDATE THIS to use admin email
+    ADMIN_EMAIL = "gpclinicaldirector@notebuilder"  # ADD THIS LINE
+    is_admin = current_user.role == "admin" or current_user.email == ADMIN_EMAIL  # ADD THIS LINE
+    
+    if db_template.created_by != current_user.id and not is_admin:  # CHANGE THIS LINE
+        raise HTTPException(status_code=403, detail="Access denied")
     
     # Soft delete - mark as deleted instead of removing from database
     db_template.deleted_at = datetime.now(timezone.utc)
     db.commit()
-
 # ============ CATEGORIES ============
 
 @router.get("/categories/all", response_model=List[CategoryResponse])
@@ -446,7 +510,7 @@ def copy_template(
         raise HTTPException(status_code=404, detail="Template not found")
     
     # Check if user has access to the original
-    if not original.is_public and original.created_by != current_user.id:
+    if not template.is_public and template.created_by != current_user.id and current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Access denied")
     
     # Create copy
@@ -479,7 +543,7 @@ def export_template_json(
         raise HTTPException(status_code=404, detail="Template not found")
     
     # Check access
-    if not template.is_public and template.created_by != current_user.id:
+    if not template.is_public and template.created_by != current_user.id and current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Access denied")
     
     # Prepare export data
@@ -517,7 +581,7 @@ def export_template_pdf(
         raise HTTPException(status_code=404, detail="Template not found")
     
     # Check access
-    if not template.is_public and template.created_by != current_user.id:
+    if not original.is_public and original.created_by != current_user.id and current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Access denied")
     
     # Create PDF in memory
