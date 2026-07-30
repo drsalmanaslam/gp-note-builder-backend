@@ -6,13 +6,13 @@ def seed_medication_review():
     admin = db.query(User).filter(User.username == "gpclinicaldirector@notebuilder").first()
     if not admin: print("Admin not found."); db.close(); return
 
-    category = db.query(Category).filter(Category.name == "General").first()
-    if not category: category = Category(name="General"); db.add(category); db.commit()
+    category = db.query(Category).filter(Category.name == "GP-Related Topics").first()
+    if not category: category = Category(name="GP-Related Topics"); db.add(category); db.commit()
 
     t = {
         "title": "Medication Review - Safety & Optimisation",
         "description": "Comprehensive medication review covering renal dosing, ACB scoring, PPI stewardship, sick day rules, drug interactions, and monitoring schedules.",
-        "category": "General",
+        "category": "GP-Related Topics",
         "content": {"sections": [
             {
                 "title": "Key Checks & Latest Results",

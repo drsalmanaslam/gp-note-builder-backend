@@ -6,13 +6,13 @@ def seed_ndls_medical():
     admin = db.query(User).filter(User.username == "gpclinicaldirector@notebuilder").first()
     if not admin: print("Admin not found."); db.close(); return
 
-    category = db.query(Category).filter(Category.name == "General").first()
-    if not category: category = Category(name="General"); db.add(category); db.commit()
+    category = db.query(Category).filter(Category.name == "GP-Related Topics").first()
+    if not category: category = Category(name="GP-Related Topics"); db.add(category); db.commit()
 
     t = {
         "title": "NDLS Medical Form - Driving Fitness",
         "description": "NDLS medical fitness to drive assessment covering Group 1 licence requirements, vision standards, neurological/cardiac screening, and substance-related restrictions.",
-        "category": "General",
+        "category": "GP-Related Topics",
         "content": {"sections": [
             {
                 "title": "Licence & General Fitness",

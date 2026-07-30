@@ -6,13 +6,13 @@ def seed_ndls_group2():
     admin = db.query(User).filter(User.username == "gpclinicaldirector@notebuilder").first()
     if not admin: print("Admin not found."); db.close(); return
 
-    category = db.query(Category).filter(Category.name == "General").first()
-    if not category: category = Category(name="General"); db.add(category); db.commit()
+    category = db.query(Category).filter(Category.name == "GP-Related Topics").first()
+    if not category: category = Category(name="GP-Related Topics"); db.add(category); db.commit()
 
     t = {
         "title": "Medical for Driving Licence - Group 2 (Bus/Truck)",
         "description": "NDLS Group 2 driving medical covering higher vision standards (optician-assessed), neurological/cardiac screening, and substance-related restrictions for commercial drivers.",
-        "category": "General",
+        "category": "GP-Related Topics",
         "content": {"sections": [
             {
                 "title": "Licence & General Fitness",
