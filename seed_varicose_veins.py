@@ -10,7 +10,7 @@ def seed_varicose_veins():
     if not category: category = Category(name="Cardiovascular"); db.add(category); db.commit()
 
     t = {
-        "title": "Varicose Veins Assessment",
+        "title": "Varicose Veins",
         "description": "Focused assessment for varicose veins covering chronic venous insufficiency complications, compression therapy (GMS Class 2), and vascular surgery referral with ABPI.",
         "category": "Cardiovascular",
         "content": {"sections": [

@@ -10,7 +10,7 @@ def seed_dysphagia():
     if not category: category = Category(name="Gastroenterology"); db.add(category); db.commit()
 
     t = {
-        "title": "Dysphagia Assessment",
+        "title": "Dysphagia",
         "description": "Focused assessment for dysphagia covering malignant vs benign causes, achalasia, globus pharyngis, bulbar palsy, and urgency of OGD referral.",
         "category": "Gastroenterology",
         "content": {"sections": [

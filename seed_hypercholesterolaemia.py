@@ -10,7 +10,7 @@ def seed_hypercholesterolaemia():
     if not category: category = Category(name="Cardiovascular"); db.add(category); db.commit()
 
     t = {
-        "title": "Hypercholesterolaemia Assessment",
+        "title": "Hypercholesterolaemia",
         "description": "Focused assessment for elevated cholesterol covering QRISK3 risk stratification, statin prescribing, familial hypercholesterolaemia red flags, and lifestyle management.",
         "category": "Cardiovascular",
         "content": {"sections": [

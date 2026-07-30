@@ -10,7 +10,7 @@ def seed_aortic_stenosis():
     if not category: category = Category(name="Cardiovascular"); db.add(category); db.commit()
 
     t = {
-        "title": "Aortic Stenosis Assessment",
+        "title": "Aortic Stenosis",
         "description": "Focused assessment for aortic stenosis covering murmur characteristics, severity indicators, red flags, and echocardiogram referral criteria.",
         "category": "Cardiovascular",
         "content": {"sections": [

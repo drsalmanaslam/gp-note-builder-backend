@@ -10,7 +10,7 @@ def seed_coeliac():
     if not category: category = Category(name="Gastroenterology"); db.add(category); db.commit()
 
     t = {
-        "title": "Coeliac Disease Assessment",
+        "title": "Coeliac Disease",
         "description": "Comprehensive template for coeliac disease covering serological testing prerequisites, diagnosis pathway, gluten-free diet counselling, vaccination, and annual monitoring.",
         "category": "Gastroenterology",
         "content": {"sections": [

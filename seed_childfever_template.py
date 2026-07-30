@@ -10,7 +10,7 @@ def seed_childfever_template():
     if not category: category = Category(name="Paediatrics"); db.add(category); db.commit()
 
     template_data = {
-        "title": "Child Fever Assessment",
+        "title": "Child Fever",
         "description": "Paediatric fever assessment using NICE traffic light system for identifying serious illness.",
         "category": "Paediatrics",
         "content": {

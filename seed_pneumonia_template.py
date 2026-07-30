@@ -10,7 +10,7 @@ def seed_pneumonia_template():
     if not category: category = Category(name="Respiratory"); db.add(category); db.commit()
 
     template_data = {
-        "title": "Community Acquired Pneumonia Assessment",
+        "title": "Community Acquired Pneumonia",
         "description": "Assessment for suspected community acquired pneumonia including CURB-65 scoring, severity assessment, and management plan.",
         "category": "Respiratory",
         "content": {

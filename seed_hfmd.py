@@ -10,7 +10,7 @@ def seed_hfmd():
     if not category: category = Category(name="Paediatrics"); db.add(category); db.commit()
 
     t = {
-        "title": "Hand, Foot & Mouth Disease Assessment",
+        "title": "Hand, Foot & Mouth Disease",
         "description": "Focused assessment for HFMD covering lesion distribution, dehydration assessment, crèche guidance, and red flags for complications.",
         "category": "Paediatrics",
         "content": {"sections": [

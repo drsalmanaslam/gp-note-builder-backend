@@ -10,7 +10,7 @@ def seed_stage1_hypertension():
     if not category: category = Category(name="Cardiovascular"); db.add(category); db.commit()
 
     t = {
-        "title": "Stage 1 Hypertension Assessment",
+        "title": "Stage 1 Hypertension",
         "description": "Structured assessment for Stage 1 hypertension covering ABPM/HBPM interpretation, target organ damage screening, QRISK stratification, and treatment thresholds.",
         "category": "Cardiovascular",
         "content": {"sections": [

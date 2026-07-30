@@ -9,7 +9,7 @@ def seed_dizziness_template():
     if not category: category = Category(name="Neurology"); db.add(category); db.commit()
 
     template_data = {
-        "title": "Dizziness & Vertigo Assessment",
+        "title": "Dizziness & Vertigo",
         "description": "Assessment for dizziness/vertigo including HINTS exam, Dix-Hallpike, and red flags for central causes.",
         "category": "Neurology",
         "content": {"sections": [

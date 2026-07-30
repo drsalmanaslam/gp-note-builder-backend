@@ -10,7 +10,7 @@ def seed_hyperprolactinaemia_female():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Hyperprolactinaemia - Female Assessment",
+        "title": "Hyperprolactinaemia - Female",
         "description": "Comprehensive assessment for hyperprolactinaemia in females including differential diagnosis, medication review, investigation, and management plan with referral criteria.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

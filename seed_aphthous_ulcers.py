@@ -10,7 +10,7 @@ def seed_aphthous_ulcers():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Aphthous Mouth Ulcers Assessment",
+        "title": "Aphthous Mouth Ulcers",
         "description": "Focused assessment for aphthous ulcers covering Behçet's/Crohn's/HSV differential, topical steroid prescribing, and red flags for systemic disease.",
         "category": "ENT",
         "content": {"sections": [

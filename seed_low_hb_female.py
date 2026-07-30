@@ -10,7 +10,7 @@ def seed_low_hb_female():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Low Haemoglobin / Anaemia - Female Assessment",
+        "title": "Low Haemoglobin / Anaemia - Female",
         "description": "Comprehensive anaemia assessment for females covering gynaecological bleeding, iron deficiency treatment, dietary advice, and referral pathways.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

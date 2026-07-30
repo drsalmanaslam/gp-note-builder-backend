@@ -10,7 +10,7 @@ def seed_palpitations():
     if not category: category = Category(name="Cardiovascular"); db.add(category); db.commit()
 
     t = {
-        "title": "Palpitations Assessment",
+        "title": "Palpitations",
         "description": "Focused assessment for palpitations covering benign vs arrhythmic causes, red flags, caffeine/anxiety triggers, and investigation pathway.",
         "category": "Cardiovascular",
         "content": {"sections": [

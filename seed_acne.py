@@ -10,7 +10,7 @@ def seed_acne():
     if not category: category = Category(name="Dermatology"); db.add(category); db.commit()
 
     t = {
-        "title": "Acne Vulgaris Assessment",
+        "title": "Acne Vulgaris",
         "description": "Comprehensive acne assessment covering severity grading, lesion-specific treatment (ABCs), oral therapy options, COCP/spironolactone, and isotretinoin referral criteria.",
         "category": "Dermatology",
         "content": {"sections": [

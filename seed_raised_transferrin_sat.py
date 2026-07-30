@@ -10,7 +10,7 @@ def seed_raised_transferrin_sat():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Raised Fasting Transferrin Saturation (>45%) Assessment",
+        "title": "Raised Fasting Transferrin Saturation (>45%)",
         "description": "Focused assessment for elevated transferrin saturation covering hereditary haemochromatosis HFE genetic testing, venesection triggers, and gastroenterology referral.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

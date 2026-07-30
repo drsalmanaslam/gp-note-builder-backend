@@ -10,7 +10,7 @@ def seed_pruritis_ani():
     if not category: category = Category(name="Gastroenterology"); db.add(category); db.commit()
 
     t = {
-        "title": "Pruritis Ani Assessment",
+        "title": "Pruritis Ani",
         "description": "Focused assessment for pruritis ani covering threadworm, dermatological, and hygiene-related causes with structured management advice.",
         "category": "Gastroenterology",
         "content": {"sections": [

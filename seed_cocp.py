@@ -10,7 +10,7 @@ def seed_cocp():
     if not category: category = Category(name="Women's Health"); db.add(category); db.commit()
 
     t = {
-        "title": "Combined Oral Contraceptive Pill (COCP) - UKMEC Assessment",
+        "title": "Combined Oral Contraceptive Pill (COCP) - UKMEC",
         "description": "UKMEC-based COCP consultation covering contraindications (MEC 3/4), pill-free interval options, missed pill rules, and formulation choices.",
         "category": "Women's Health",
         "content": {"sections": [

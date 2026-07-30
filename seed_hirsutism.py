@@ -10,7 +10,7 @@ def seed_hirsutism():
     if not category: category = Category(name="Women's Health"); db.add(category); db.commit()
 
     t = {
-        "title": "Hirsutism Assessment",
+        "title": "Hirsutism",
         "description": "Focused assessment for hirsutism including PCOS evaluation, hormonal workup, and management options from lifestyle to medical treatment.",
         "category": "Women's Health",
         "content": {"sections": [

@@ -10,7 +10,7 @@ def seed_vitamin_d_deficiency():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Vitamin D Deficiency Assessment",
+        "title": "Vitamin D Deficiency",
         "description": "Comprehensive vitamin D assessment covering deficiency vs insufficiency, Irish-specific treatment regimens (Altavita, Thorens, Desunin, Dnord), and HSE population guidance.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

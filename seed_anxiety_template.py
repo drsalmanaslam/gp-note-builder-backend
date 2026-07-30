@@ -10,7 +10,7 @@ def seed_anxiety_template():
     if not category: category = Category(name="Mental Health"); db.add(category); db.commit()
 
     template_data = {
-        "title": "Anxiety Assessment",
+        "title": "Anxiety",
         "description": "Assessment for generalised anxiety disorder including GAD-7 scoring and red flags.",
         "category": "Mental Health",
         "content": {

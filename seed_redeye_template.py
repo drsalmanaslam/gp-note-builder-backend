@@ -9,7 +9,7 @@ def seed_redeye_template():
     if not category: category = Category(name="Ophthalmology"); db.add(category); db.commit()
 
     template_data = {
-        "title": "Red Eye Assessment",
+        "title": "Red Eye",
         "description": "Assessment for red eye including red flags for serious ophthalmology conditions.",
         "category": "Ophthalmology",
         "content": {"sections": [

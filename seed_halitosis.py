@@ -10,7 +10,7 @@ def seed_halitosis():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Halitosis Assessment",
+        "title": "Halitosis",
         "description": "Focused assessment for halitosis covering dental, sinus, GORD, and pharyngeal pouch causes with structured lifestyle and hygiene advice.",
         "category": "ENT",
         "content": {"sections": [

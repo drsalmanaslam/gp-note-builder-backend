@@ -10,7 +10,7 @@ def seed_subconjunctival_haemorrhage():
     if not category: category = Category(name="Ophthalmology"); db.add(category); db.commit()
 
     t = {
-        "title": "Subconjunctival Haemorrhage Assessment",
+        "title": "Subconjunctival Haemorrhage",
         "description": "Focused assessment for subconjunctival haemorrhage covering red flags for trauma/bleeding disorders, BP check, and reassurance.",
         "category": "Ophthalmology",
         "content": {"sections": [

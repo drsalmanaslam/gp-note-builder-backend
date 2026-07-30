@@ -10,7 +10,7 @@ def seed_rash_template():
     if not category: category = Category(name="Dermatology"); db.add(category); db.commit()
 
     template_data = {
-        "title": "Rash Assessment",
+        "title": "Rash",
         "description": "Structured assessment for skin rashes including red flags for serious conditions.",
         "category": "Dermatology",
         "content": {

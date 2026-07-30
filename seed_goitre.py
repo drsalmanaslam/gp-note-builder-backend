@@ -10,7 +10,7 @@ def seed_goitre():
     if not category: category = Category(name="Endocrinology"); db.add(category); db.commit()
 
     t = {
-        "title": "Goitre / Thyroid Enlargement Assessment",
+        "title": "Goitre / Thyroid Enlargement",
         "description": "Focused assessment for goitre covering hyper/hypothyroid screening, examination, red flags, and investigation pathway.",
         "category": "Endocrinology",
         "content": {"sections": [

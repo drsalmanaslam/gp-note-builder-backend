@@ -10,7 +10,7 @@ def seed_gastroenteritis():
     if not category: category = Category(name="Gastroenterology"); db.add(category); db.commit()
 
     t = {
-        "title": "Gastroenteritis Assessment",
+        "title": "Gastroenteritis",
         "description": "Focused assessment for gastroenteritis covering dehydration assessment, medication holds, stool testing criteria, and school/work exclusion advice.",
         "category": "Gastroenterology",
         "content": {"sections": [

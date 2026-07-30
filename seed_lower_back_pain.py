@@ -10,7 +10,7 @@ def seed_lower_back_pain():
     if not category: category = Category(name="Musculoskeletal"); db.add(category); db.commit()
 
     t = {
-        "title": "Lower Back Pain Assessment",
+        "title": "Lower Back Pain",
         "description": "Focused assessment for lower back pain with red flags for cauda equina, fracture, malignancy, and infection.",
         "category": "Musculoskeletal",
         "content": {"sections": [

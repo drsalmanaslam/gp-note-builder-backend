@@ -10,7 +10,7 @@ def seed_stage3_hypertension():
     if not category: category = Category(name="Cardiovascular"); db.add(category); db.commit()
 
     t = {
-        "title": "Stage 3 Severe Hypertension Assessment",
+        "title": "Stage 3 Severe Hypertension",
         "description": "Emergency-focused assessment for severe hypertension (≥180/120) covering acute TOD screening, hospital vs primary care management, and immediate pharmacotherapy.",
         "category": "Cardiovascular",
         "content": {"sections": [

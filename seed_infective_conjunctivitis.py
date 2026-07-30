@@ -10,7 +10,7 @@ def seed_infective_conjunctivitis():
     if not category: category = Category(name="Ophthalmology"); db.add(category); db.commit()
 
     t = {
-        "title": "Infective Conjunctivitis Assessment",
+        "title": "Infective Conjunctivitis",
         "description": "Focused assessment for infective conjunctivitis covering bacterial vs viral differentiation, antibiotic stewardship, and red flags.",
         "category": "Ophthalmology",
         "content": {"sections": [

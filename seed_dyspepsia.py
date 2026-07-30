@@ -10,7 +10,7 @@ def seed_dyspepsia():
     if not category: category = Category(name="Gastroenterology"); db.add(category); db.commit()
 
     t = {
-        "title": "Dyspepsia / GORD Assessment",
+        "title": "Dyspepsia / GORD",
         "description": "Focused assessment for dyspepsia and GORD covering symptom differentiation, alarm features for malignancy, PPI therapy, H. pylori testing, and lifestyle advice.",
         "category": "Gastroenterology",
         "content": {"sections": [

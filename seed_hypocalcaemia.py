@@ -10,7 +10,7 @@ def seed_hypocalcaemia():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Low Calcium / Hypocalcaemia Assessment",
+        "title": "Low Calcium / Hypocalcaemia",
         "description": "Comprehensive hypocalcaemia assessment covering emergency threshold (<1.9mmol/L), Trousseau's/Chvostek's signs, PTH interpretation, and vitamin D/magnesium correction pathways.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

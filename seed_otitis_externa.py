@@ -10,7 +10,7 @@ def seed_otitis_externa():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Otitis Externa Assessment",
+        "title": "Otitis Externa",
         "description": "Focused assessment for otitis externa covering malignant otitis red flags, TM perforation-safe topical antibiotics, and practical prescribing tips.",
         "category": "ENT",
         "content": {"sections": [

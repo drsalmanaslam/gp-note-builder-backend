@@ -10,7 +10,7 @@ def seed_pityriasis_versicolor():
     if not category: category = Category(name="Dermatology"); db.add(category); db.commit()
 
     t = {
-        "title": "Pityriasis Versicolor Assessment",
+        "title": "Pityriasis Versicolor",
         "description": "Focused assessment for pityriasis versicolor with topical and systemic treatment options and differentiation from other hypopigmented rashes.",
         "category": "Dermatology",
         "content": {"sections": [

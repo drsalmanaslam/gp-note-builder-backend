@@ -10,7 +10,7 @@ def seed_short_stature():
     if not category: category = Category(name="Paediatrics"); db.add(category); db.commit()
 
     t = {
-        "title": "Short Stature Assessment",
+        "title": "Short Stature",
         "description": "Focused assessment for short stature in children covering mid-parental height, red flags, investigations, and referral criteria.",
         "category": "Paediatrics",
         "content": {"sections": [

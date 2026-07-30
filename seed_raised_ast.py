@@ -10,7 +10,7 @@ def seed_raised_ast():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Raised AST Assessment",
+        "title": "Raised AST",
         "description": "Focused assessment for raised AST covering NAFLD vs alcoholic liver disease differentiation, AST:ALT ratio interpretation, and stepwise investigation.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

@@ -10,7 +10,7 @@ def seed_heart_failure():
     if not category: category = Category(name="Cardiovascular"); db.add(category); db.commit()
 
     t = {
-        "title": "Heart Failure Assessment",
+        "title": "Heart Failure",
         "description": "Comprehensive heart failure consultation covering NYHA class, haemodynamic profile, GDMT 4 pillars, and monitoring protocols.",
         "category": "Cardiovascular",
         "content": {"sections": [

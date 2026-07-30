@@ -9,7 +9,7 @@ def seed_menstrual_template():
     if not category: category = Category(name="Gynaecology"); db.add(category); db.commit()
 
     template_data = {
-        "title": "Heavy Menstrual Bleeding Assessment",
+        "title": "Heavy Menstrual Bleeding",
         "description": "Assessment for heavy menstrual bleeding including FIGO classification and management options.",
         "category": "Gynaecology",
         "content": {"sections": [

@@ -10,7 +10,7 @@ def seed_snoring():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Snoring Assessment",
+        "title": "Snoring",
         "description": "Focused assessment for snoring covering OSA screening (witnessed apnoeas, daytime sleepiness), lifestyle management, and sleep study referral criteria.",
         "category": "ENT",
         "content": {"sections": [

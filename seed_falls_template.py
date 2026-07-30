@@ -10,7 +10,7 @@ def seed_falls_template():
     if not category: category = Category(name="Elderly Care"); db.add(category); db.commit()
 
     template_data = {
-        "title": "Falls Assessment",
+        "title": "Falls",
         "description": "Comprehensive falls assessment for elderly patients including multifactorial risk evaluation.",
         "category": "Elderly Care",
         "content": {

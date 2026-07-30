@@ -10,7 +10,7 @@ def seed_raised_ggt():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Raised GGT Assessment",
+        "title": "Raised GGT",
         "description": "Focused assessment for raised GGT covering alcohol vs cholestasis differentiation, PBC screening, and combined GGT/ALP/MCV interpretation.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

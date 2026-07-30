@@ -10,7 +10,7 @@ def seed_raised_alp():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Raised Alkaline Phosphatase Assessment",
+        "title": "Raised Alkaline Phosphatase",
         "description": "Stepwise investigation of raised ALP covering hepatobiliary vs bone source differentiation, PBC screening, and drug-induced causes.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

@@ -10,7 +10,7 @@ def seed_epistaxis():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Epistaxis / Nosebleed Assessment",
+        "title": "Epistaxis / Nosebleed",
         "description": "Emergency-focused assessment for epistaxis with acute management, red flags for tumour/bleeding disorders, anticoagulant review, and management including cautery criteria.",
         "category": "ENT",
         "content": {"sections": [

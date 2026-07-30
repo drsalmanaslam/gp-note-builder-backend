@@ -10,7 +10,7 @@ def seed_tiredness():
     if not category: category = Category(name="General"); db.add(category); db.commit()
 
     t = {
-        "title": "Tiredness / Fatigue Assessment",
+        "title": "Tiredness / Fatigue",
         "description": "Systematic assessment for tiredness and fatigue including red flags, common causes, and investigations.",
         "category": "General",
         "content": {"sections": [

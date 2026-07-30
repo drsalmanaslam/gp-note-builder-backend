@@ -10,7 +10,7 @@ def seed_otitis_media():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Acute Otitis Media Assessment",
+        "title": "Acute Otitis Media",
         "description": "Focused assessment for acute otitis media covering mastoiditis/facial nerve red flags, watchful waiting, delayed antibiotic prescribing, and safety netting.",
         "category": "ENT",
         "content": {"sections": [

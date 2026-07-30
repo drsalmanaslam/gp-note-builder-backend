@@ -16,7 +16,7 @@ def seed_headache_template():
         db.commit()
 
     template_data = {
-        "title": "Headache Assessment",
+        "title": "Headache",
         "description": "Structured assessment for patients presenting with headache. Includes red flags for serious pathology.",
         "category": "Neurology",
         "content": {

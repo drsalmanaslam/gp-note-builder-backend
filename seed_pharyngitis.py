@@ -10,7 +10,7 @@ def seed_pharyngitis():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Pharyngitis / Sore Throat Assessment",
+        "title": "Pharyngitis / Sore Throat",
         "description": "Emergency-focused assessment for sore throat with Centor/FeverPAIN criteria, red flags for quinsy/airway compromise, and antibiotic stewardship.",
         "category": "ENT",
         "content": {"sections": [

@@ -10,7 +10,7 @@ def seed_allergic_conjunctivitis():
     if not category: category = Category(name="Ophthalmology"); db.add(category); db.commit()
 
     t = {
-        "title": "Allergic Conjunctivitis Assessment",
+        "title": "Allergic Conjunctivitis",
         "description": "Focused assessment for allergic conjunctivitis covering red flags for serious ocular pathology, topical treatment, and safety netting.",
         "category": "Ophthalmology",
         "content": {"sections": [

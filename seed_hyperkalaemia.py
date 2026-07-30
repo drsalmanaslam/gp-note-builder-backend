@@ -10,7 +10,7 @@ def seed_hyperkalaemia():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Hyperkalaemia Assessment",
+        "title": "Hyperkalaemia",
         "description": "Emergency-focused hyperkalaemia assessment covering severity stratification, ECG interpretation, pseudohyperkalaemia exclusion, and urgent management pathways.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

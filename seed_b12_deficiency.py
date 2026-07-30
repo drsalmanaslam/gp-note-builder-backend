@@ -10,7 +10,7 @@ def seed_b12_deficiency():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Low Vitamin B12 Assessment",
+        "title": "Low Vitamin B12",
         "description": "Comprehensive B12 deficiency assessment covering neurological red flags, pernicious anaemia diagnosis, IM vs oral treatment pathways, and concurrent folate safety.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

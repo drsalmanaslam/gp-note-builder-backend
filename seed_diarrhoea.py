@@ -10,7 +10,7 @@ def seed_diarrhoea():
     if not category: category = Category(name="Gastroenterology"); db.add(category); db.commit()
 
     t = {
-        "title": "Diarrhoea Assessment",
+        "title": "Diarrhoea",
         "description": "Focused assessment for diarrhoea covering infective vs inflammatory causes, red flags, stool testing, safety-netting, and school/work exclusion advice.",
         "category": "Gastroenterology",
         "content": {"sections": [

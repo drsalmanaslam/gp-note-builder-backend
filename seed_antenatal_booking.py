@@ -10,7 +10,7 @@ def seed_antenatal_booking():
     if not category: category = Category(name="Women's Health"); db.add(category); db.commit()
 
     t = {
-        "title": "Antenatal Booking Assessment",
+        "title": "Antenatal Booking",
         "description": "Comprehensive antenatal booking appointment covering risk assessment, screening, and early pregnancy planning.",
         "category": "Women's Health",
         "content": {"sections": [

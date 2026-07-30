@@ -10,7 +10,7 @@ def seed_hyponatraemia():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Low Sodium / Hyponatraemia Assessment",
+        "title": "Low Sodium / Hyponatraemia",
         "description": "Comprehensive hyponatraemia assessment covering NICE severity triage, fluid status interpretation, SIADH diagnostic criteria, and medication review.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

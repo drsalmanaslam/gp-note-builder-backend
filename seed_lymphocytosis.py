@@ -10,7 +10,7 @@ def seed_lymphocytosis():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Lymphocytosis Assessment",
+        "title": "Lymphocytosis",
         "description": "Focused assessment for lymphocytosis covering reactive vs clonal causes, B-symptom red flags, haematology referral criteria, and CLL monitoring guidance.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

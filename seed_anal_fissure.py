@@ -10,7 +10,7 @@ def seed_anal_fissure():
     if not category: category = Category(name="Gastroenterology"); db.add(category); db.commit()
 
     t = {
-        "title": "Anal Fissure Assessment",
+        "title": "Anal Fissure",
         "description": "Focused assessment for anal fissure covering differentiation from haemorrhoids, examination findings, and stepwise management from conservative to surgical.",
         "category": "Gastroenterology",
         "content": {"sections": [

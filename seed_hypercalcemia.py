@@ -10,7 +10,7 @@ def seed_hypercalcemia():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Hypercalcemia Assessment",
+        "title": "Hypercalcemia",
         "description": "Comprehensive assessment for hypercalcemia in general practice including differential diagnosis, investigation, and management plan with referral criteria.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

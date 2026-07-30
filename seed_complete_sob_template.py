@@ -12,7 +12,7 @@ def seed_complete_sob_template():
         return
     
     template_data = {
-        "title": "Shortness of Breath (SOB) - Complete Assessment",
+        "title": "Shortness of Breath (SOB) - Complete",
         "description": "Complete SOB assessment with all symptoms, signs, red flags, and management.",
         "category": "Respiratory",
         "content": {

@@ -10,7 +10,7 @@ def seed_copd_exacerbation():
     if not category: category = Category(name="Respiratory"); db.add(category); db.commit()
 
     t = {
-        "title": "COPD Exacerbation Assessment",
+        "title": "COPD Exacerbation",
         "description": "Acute COPD exacerbation management covering steroid/antibiotic decisions, NICE NG114 vs GOLD guidance, admission criteria, and patient education resources.",
         "category": "Respiratory",
         "content": {"sections": [

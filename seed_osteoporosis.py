@@ -10,7 +10,7 @@ def seed_osteoporosis():
     if not category: category = Category(name="Chronic Disease Reviews"); db.add(category); db.commit()
 
     t = {
-        "title": "Osteoporosis Assessment",
+        "title": "Osteoporosis",
         "description": "Comprehensive osteoporosis assessment covering FRAX risk stratification, DEXA interpretation, antiresorptive therapy prescribing, and safety monitoring.",
         "category": "Chronic Disease Reviews",
         "content": {"sections": [

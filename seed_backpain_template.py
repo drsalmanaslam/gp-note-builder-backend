@@ -10,7 +10,7 @@ def seed_backpain_template():
     if not category: category = Category(name="Musculoskeletal"); db.add(category); db.commit()
 
     template_data = {
-        "title": "Back Pain Assessment",
+        "title": "Back Pain",
         "description": "Assessment for low back pain including red flags for cauda equina and spinal pathology.",
         "category": "Musculoskeletal",
         "content": {

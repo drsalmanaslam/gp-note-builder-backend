@@ -10,7 +10,7 @@ def seed_tatt_female():
     if not category: category = Category(name="Women's Health"); db.add(category); db.commit()
 
     t = {
-        "title": "Tired All The Time (TATT) - Female Assessment",
+        "title": "Tired All The Time (TATT) - Female",
         "description": "Comprehensive assessment for fatigue in women covering sleep history, systems review, red flags for malignancy, and investigation pathways.",
         "category": "Women's Health",
         "content": {"sections": [

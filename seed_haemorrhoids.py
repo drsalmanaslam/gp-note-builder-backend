@@ -10,7 +10,7 @@ def seed_haemorrhoids():
     if not category: category = Category(name="Gastroenterology"); db.add(category); db.commit()
 
     t = {
-        "title": "Haemorrhoids Assessment",
+        "title": "Haemorrhoids",
         "description": "Focused assessment for haemorrhoids covering grading, differentiation from anal fissure, conservative management, and escalation to surgical options.",
         "category": "Gastroenterology",
         "content": {"sections": [

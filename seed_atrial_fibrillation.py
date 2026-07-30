@@ -10,7 +10,7 @@ def seed_atrial_fibrillation():
     if not category: category = Category(name="Cardiovascular"); db.add(category); db.commit()
 
     t = {
-        "title": "Atrial Fibrillation Assessment",
+        "title": "Atrial Fibrillation",
         "description": "Focused assessment for AF covering CHA2DS2-VASc scoring, rate vs rhythm control, DOAC prescribing, and stroke prevention.",
         "category": "Cardiovascular",
         "content": {"sections": [

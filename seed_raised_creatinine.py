@@ -10,7 +10,7 @@ def seed_raised_creatinine():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Raised Creatinine Assessment",
+        "title": "Raised Creatinine",
         "description": "Structured assessment for raised creatinine covering spurious causes (cimetidine/trimethoprim), CKD staging, and stepwise renal investigation.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

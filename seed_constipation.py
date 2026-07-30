@@ -10,7 +10,7 @@ def seed_constipation():
     if not category: category = Category(name="Gastroenterology"); db.add(category); db.commit()
 
     t = {
-        "title": "Constipation Assessment",
+        "title": "Constipation",
         "description": "Focused assessment for constipation covering Bristol Stool Chart classification, medication review, red flags, laxative therapy, and faecal disimpaction protocol.",
         "category": "Gastroenterology",
         "content": {"sections": [

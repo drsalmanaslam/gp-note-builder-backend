@@ -10,7 +10,7 @@ def seed_rectal_bleeding():
     if not category: category = Category(name="Gastroenterology"); db.add(category); db.commit()
 
     t = {
-        "title": "Rectal Bleeding - ?Haemorrhoids Assessment",
+        "title": "Rectal Bleeding - ?Haemorrhoids",
         "description": "Focused assessment for rectal bleeding covering haemorrhoidal vs colorectal cancer differentiation, blood characteristics, and NICE NG12 2WW referral criteria.",
         "category": "Gastroenterology",
         "content": {"sections": [

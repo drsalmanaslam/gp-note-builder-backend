@@ -10,7 +10,7 @@ def seed_sinusitis():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Acute Bacterial Sinusitis Assessment",
+        "title": "Acute Bacterial Sinusitis",
         "description": "Focused assessment for acute sinusitis covering NICE antibiotic guidance (≤10 vs >10 days), red flags for periorbital infection, and symptomatic management.",
         "category": "ENT",
         "content": {"sections": [

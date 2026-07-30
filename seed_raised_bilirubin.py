@@ -10,7 +10,7 @@ def seed_raised_bilirubin():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Raised Bilirubin Assessment",
+        "title": "Raised Bilirubin",
         "description": "Focused assessment for raised bilirubin covering Gilbert's syndrome vs haemolysis vs hepatobiliary causes, fractionated bilirubin interpretation, and stepwise investigation.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

@@ -10,7 +10,7 @@ def seed_floaters():
     if not category: category = Category(name="Ophthalmology"); db.add(category); db.commit()
 
     t = {
-        "title": "Floaters & Flashes Assessment",
+        "title": "Floaters & Flashes",
         "description": "Emergency-focused assessment for floaters and flashes with red flags for retinal detachment, PVD, and vitreous haemorrhage.",
         "category": "Ophthalmology",
         "content": {"sections": [

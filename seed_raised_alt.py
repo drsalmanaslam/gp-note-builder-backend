@@ -10,7 +10,7 @@ def seed_raised_alt():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Raised ALT Assessment",
+        "title": "Raised ALT",
         "description": "Structured assessment for raised ALT covering NAFLD risk stratification, AST:ALT ratio interpretation, stepwise investigation, and lifestyle management.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

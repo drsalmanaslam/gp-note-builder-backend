@@ -10,7 +10,7 @@ def seed_episcleritis():
     if not category: category = Category(name="Ophthalmology"); db.add(category); db.commit()
 
     t = {
-        "title": "Episcleritis Assessment",
+        "title": "Episcleritis",
         "description": "Focused assessment for episcleritis covering differentiation from scleritis, red flags, phenylephrine test, and management.",
         "category": "Ophthalmology",
         "content": {"sections": [

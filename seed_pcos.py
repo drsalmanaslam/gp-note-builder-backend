@@ -10,7 +10,7 @@ def seed_pcos():
     if not category: category = Category(name="Women's Health"); db.add(category); db.commit()
 
     t = {
-        "title": "PCOS / Polycystic Ovarian Syndrome Assessment",
+        "title": "PCOS / Polycystic Ovarian Syndrome",
         "description": "Focused assessment for PCOS including Rotterdam criteria, metabolic screening, and management of hirsutism, oligomenorrhoea, and insulin resistance.",
         "category": "Women's Health",
         "content": {"sections": [

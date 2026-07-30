@@ -10,7 +10,7 @@ def seed_sebaceous_cyst():
     if not category: category = Category(name="Dermatology"); db.add(category); db.commit()
 
     t = {
-        "title": "Sebaceous Cyst (Epidermoid Cyst) Assessment",
+        "title": "Sebaceous Cyst (Epidermoid Cyst)",
         "description": "Focused assessment for sebaceous/epidermoid cysts covering diagnostic features (punctum, mobility), infection red flags, and excision referral.",
         "category": "Dermatology",
         "content": {"sections": [

@@ -10,7 +10,7 @@ def seed_gallstones():
     if not category: category = Category(name="Gastroenterology"); db.add(category); db.commit()
 
     t = {
-        "title": "Gallstones / Biliary Colic Assessment",
+        "title": "Gallstones / Biliary Colic",
         "description": "Focused assessment for gallstone disease covering biliary colic vs cholecystitis vs cholangitis differentiation, Murphy's sign, and surgical referral criteria.",
         "category": "Gastroenterology",
         "content": {"sections": [

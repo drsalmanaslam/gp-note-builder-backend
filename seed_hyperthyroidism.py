@@ -10,7 +10,7 @@ def seed_hyperthyroidism():
     if not category: category = Category(name="Endocrinology"); db.add(category); db.commit()
 
     t = {
-        "title": "Hyperthyroidism Assessment",
+        "title": "Hyperthyroidism",
         "description": "Focused assessment for hyperthyroidism covering symptom screening, examination, TFT interpretation, carbimazole dosing by age/T4, and safety-netting.",
         "category": "Endocrinology",
         "content": {"sections": [

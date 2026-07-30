@@ -10,7 +10,7 @@ def seed_urti():
     if not category: category = Category(name="Respiratory"); db.add(category); db.commit()
 
     t = {
-        "title": "Viral URTI Assessment",
+        "title": "Viral URTI",
         "description": "Focused assessment for viral upper respiratory tract infection covering red flags for LRTI, asthma considerations, and symptomatic management.",
         "category": "Respiratory",
         "content": {"sections": [

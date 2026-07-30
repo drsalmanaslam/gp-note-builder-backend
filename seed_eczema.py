@@ -10,7 +10,7 @@ def seed_eczema():
     if not category: category = Category(name="Dermatology"); db.add(category); db.commit()
 
     t = {
-        "title": "Eczema / Atopic Dermatitis Assessment",
+        "title": "Eczema / Atopic Dermatitis",
         "description": "Focused assessment for eczema including severity, triggers, infection red flags, and stepwise management.",
         "category": "Dermatology",
         "content": {"sections": [

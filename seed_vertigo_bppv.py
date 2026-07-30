@@ -10,7 +10,7 @@ def seed_vertigo_bppv():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Vertigo / BPPV Assessment",
+        "title": "Vertigo / BPPV",
         "description": "Focused assessment for acute vertigo with Dix-Hallpike testing, Epley manoeuvre, and red flags for central causes.",
         "category": "ENT",
         "content": {"sections": [

@@ -10,7 +10,7 @@ def seed_shingles():
     if not category: category = Category(name="Dermatology"); db.add(category); db.commit()
 
     t = {
-        "title": "Shingles / Herpes Zoster Assessment",
+        "title": "Shingles / Herpes Zoster",
         "description": "Focused assessment for herpes zoster with antiviral treatment, red flags for ophthalmic/otic involvement, and post-herpetic neuralgia counselling.",
         "category": "Dermatology",
         "content": {"sections": [

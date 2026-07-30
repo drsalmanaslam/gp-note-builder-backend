@@ -10,7 +10,7 @@ def seed_influenza():
     if not category: category = Category(name="Respiratory"); db.add(category); db.commit()
 
     t = {
-        "title": "Influenza Assessment",
+        "title": "Influenza",
         "description": "Focused assessment for influenza covering Tamiflu (oseltamivir) indication criteria per HSE guidance, symptomatic management, and infection control advice.",
         "category": "Respiratory",
         "content": {"sections": [

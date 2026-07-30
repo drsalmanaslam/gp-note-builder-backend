@@ -10,7 +10,7 @@ def seed_chronic_cough_extended():
     if not category: category = Category(name="Respiratory"); db.add(category); db.commit()
 
     t = {
-        "title": "Chronic Cough (>8 Weeks) - BTS Guideline Assessment",
+        "title": "Chronic Cough (>8 Weeks) - BTS Guideline",
         "description": "BTS guideline-based assessment for chronic cough >8 weeks covering the three most common causes: cough variant asthma, GORD, and upper airway disease, with targeted treatment trials.",
         "category": "Respiratory",
         "content": {"sections": [

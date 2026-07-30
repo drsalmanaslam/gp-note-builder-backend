@@ -10,7 +10,7 @@ def seed_tonsillitis():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Tonsillitis Assessment",
+        "title": "Tonsillitis",
         "description": "Focused assessment for tonsillitis covering quinsy red flags, Centor/FeverPAIN scoring, Penicillin V prescribing, and recurrent tonsillitis referral criteria.",
         "category": "ENT",
         "content": {"sections": [

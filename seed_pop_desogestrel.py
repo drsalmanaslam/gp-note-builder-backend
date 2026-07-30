@@ -10,7 +10,7 @@ def seed_pop_desogestrel():
     if not category: category = Category(name="Women's Health"); db.add(category); db.commit()
 
     t = {
-        "title": "Progesterone-Only Pill (Desogestrel) - UKMEC Assessment",
+        "title": "Progesterone-Only Pill (Desogestrel) - UKMEC",
         "description": "Desogestrel POP consultation covering UKMEC 3 threshold (≥2 risk factors), starting rules, missed pill guidance, expected bleeding patterns, and age-related stopping criteria.",
         "category": "Women's Health",
         "content": {"sections": [

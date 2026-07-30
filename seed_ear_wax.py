@@ -10,7 +10,7 @@ def seed_ear_wax():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Ear Wax / Impacted Cerumen Assessment",
+        "title": "Ear Wax / Impacted Cerumen",
         "description": "Focused assessment for ear wax impaction with otoscopy findings, red flags for perforation, and management including microsuction/irrigation criteria.",
         "category": "ENT",
         "content": {"sections": [

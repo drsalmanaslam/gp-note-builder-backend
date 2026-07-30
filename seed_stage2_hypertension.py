@@ -10,7 +10,7 @@ def seed_stage2_hypertension():
     if not category: category = Category(name="Cardiovascular"); db.add(category); db.commit()
 
     t = {
-        "title": "Stage 2 Hypertension Assessment",
+        "title": "Stage 2 Hypertension",
         "description": "Structured assessment for Stage 2 hypertension covering immediate pharmacotherapy initiation, drug selection by age/ethnicity, fixed-dose combinations, and monitoring.",
         "category": "Cardiovascular",
         "content": {"sections": [

@@ -10,7 +10,7 @@ def seed_sorethroat_template():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     template_data = {
-        "title": "Sore Throat Assessment",
+        "title": "Sore Throat",
         "description": "Assessment for sore throat including Centor criteria and red flags.",
         "category": "ENT",
         "content": {

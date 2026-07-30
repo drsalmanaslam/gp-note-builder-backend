@@ -10,7 +10,7 @@ def seed_chickenpox():
     if not category: category = Category(name="Paediatrics"); db.add(category); db.commit()
 
     t = {
-        "title": "Chickenpox / Varicella Assessment",
+        "title": "Chickenpox / Varicella",
         "description": "Focused assessment for varicella zoster infection covering lesion staging, red flags for complications, NSAID avoidance, and infection control.",
         "category": "Paediatrics",
         "content": {"sections": [

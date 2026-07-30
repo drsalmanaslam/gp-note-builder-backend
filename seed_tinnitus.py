@@ -10,7 +10,7 @@ def seed_tinnitus():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Tinnitus Assessment",
+        "title": "Tinnitus",
         "description": "Focused assessment for tinnitus covering unilateral vs bilateral differentiation, acoustic neuroma exclusion, ototoxic medication review, and management strategies.",
         "category": "ENT",
         "content": {"sections": [

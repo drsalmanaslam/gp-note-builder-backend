@@ -10,7 +10,7 @@ def seed_inguinal_hernia():
     if not category: category = Category(name="Gastroenterology"); db.add(category); db.commit()
 
     t = {
-        "title": "Inguinal Hernia Assessment",
+        "title": "Inguinal Hernia",
         "description": "Focused assessment for inguinal hernia covering strangulation red flags, deep ring occlusion test, differentiation of direct vs indirect, and surgical referral pathway.",
         "category": "Gastroenterology",
         "content": {"sections": [

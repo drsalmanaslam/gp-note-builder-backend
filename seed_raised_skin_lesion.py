@@ -10,7 +10,7 @@ def seed_raised_skin_lesion():
     if not category: category = Category(name="Dermatology"); db.add(category); db.commit()
 
     t = {
-        "title": "Raised Skin Lesion Assessment",
+        "title": "Raised Skin Lesion",
         "description": "Comprehensive assessment for raised skin lesions covering benign vs malignant differentiation, clinical clues, and urgent referral criteria.",
         "category": "Dermatology",
         "content": {"sections": [

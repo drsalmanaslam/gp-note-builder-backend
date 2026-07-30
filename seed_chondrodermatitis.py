@@ -10,7 +10,7 @@ def seed_chondrodermatitis():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Chondrodermatitis Nodularis Helicis Assessment",
+        "title": "Chondrodermatitis Nodularis Helicis",
         "description": "Focused assessment for chondrodermatitis nodularis helicis covering conservative pressure-relief management and referral criteria for wedge biopsy.",
         "category": "ENT",
         "content": {"sections": [

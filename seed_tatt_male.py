@@ -10,7 +10,7 @@ def seed_tatt_male():
     if not category: category = Category(name="Men's Health"); db.add(category); db.commit()
 
     t = {
-        "title": "Tired All The Time (TATT) - Male Assessment",
+        "title": "Tired All The Time (TATT) - Male",
         "description": "Comprehensive assessment for fatigue in men covering sleep history, OSA screening, systems review, red flags for malignancy, and VAMPIRE trial evidence-based investigation pathways.",
         "category": "Men's Health",
         "content": {"sections": [

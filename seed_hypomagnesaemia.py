@@ -10,7 +10,7 @@ def seed_hypomagnesaemia():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Low Magnesium / Hypomagnesaemia Assessment",
+        "title": "Low Magnesium / Hypomagnesaemia",
         "description": "Focused assessment for hypomagnesaemia covering severity triage, PPI/diuretic/digoxin drug interactions, and Maalox outpatient replacement protocol.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

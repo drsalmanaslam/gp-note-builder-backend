@@ -10,7 +10,7 @@ def seed_dry_eyes():
     if not category: category = Category(name="Ophthalmology"); db.add(category); db.commit()
 
     t = {
-        "title": "Dry Eyes Assessment",
+        "title": "Dry Eyes",
         "description": "Focused assessment for dry eye syndrome covering environmental modifications, lubricant options, preservative-free indications, and red flags.",
         "category": "Ophthalmology",
         "content": {"sections": [

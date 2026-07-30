@@ -12,7 +12,7 @@ def seed_abdominal_pain_template():
         db.add(category); db.commit()
 
     template_data = {
-        "title": "Abdominal Pain Assessment",
+        "title": "Abdominal Pain",
         "description": "Structured assessment for abdominal pain including surgical red flags.",
         "category": "Gastroenterology",
         "content": {

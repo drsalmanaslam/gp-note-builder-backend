@@ -10,7 +10,7 @@ def seed_chronic_cough():
     if not category: category = Category(name="Respiratory"); db.add(category); db.commit()
 
     t = {
-        "title": "Chronic Cough Assessment",
+        "title": "Chronic Cough",
         "description": "Comprehensive assessment for chronic cough including differential diagnosis, red flags, and management plan.",
         "category": "Respiratory",
         "content": {"sections": [

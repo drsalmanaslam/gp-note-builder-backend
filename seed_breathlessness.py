@@ -10,7 +10,7 @@ def seed_breathlessness():
     if not category: category = Category(name="Respiratory"); db.add(category); db.commit()
 
     t = {
-        "title": "Breathlessness / SOB - Comprehensive Assessment",
+        "title": "Breathlessness / SOB - Comprehensive",
         "description": "Comprehensive breathlessness assessment covering mMRC grading, cardiac vs respiratory differentiation, spirometry interpretation, NT-proBNP pathway, and multifactorial approach.",
         "category": "Respiratory",
         "content": {"sections": [

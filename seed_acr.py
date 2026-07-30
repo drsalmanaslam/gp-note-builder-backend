@@ -10,7 +10,7 @@ def seed_acr():
     if not category: category = Category(name="Chronic Disease Reviews"); db.add(category); db.commit()
 
     t = {
-        "title": "ACR (Albumin:Creatinine Ratio) Assessment",
+        "title": "ACR (Albumin:Creatinine Ratio)",
         "description": "Focused assessment for interpreting urine ACR results covering diagnostic thresholds, ACE inhibitor indications, BP targets, and nephrology referral criteria.",
         "category": "Chronic Disease Reviews",
         "content": {"sections": [

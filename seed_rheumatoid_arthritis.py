@@ -10,7 +10,7 @@ def seed_rheumatoid_arthritis():
     if not category: category = Category(name="Musculoskeletal"); db.add(category); db.commit()
 
     t = {
-        "title": "Rheumatoid Arthritis - Initial Assessment",
+        "title": "Rheumatoid Arthritis - Initial",
         "description": "Comprehensive RA assessment covering diagnostic criteria (>6 weeks, bilateral small joints), immunopathology workup, rheumatology referral pathway, and DMARD monitoring protocols.",
         "category": "Musculoskeletal",
         "content": {"sections": [

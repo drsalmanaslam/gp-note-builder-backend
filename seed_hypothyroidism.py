@@ -10,7 +10,7 @@ def seed_hypothyroidism():
     if not category: category = Category(name="Endocrinology"); db.add(category); db.commit()
 
     t = {
-        "title": "Hypothyroidism Assessment",
+        "title": "Hypothyroidism",
         "description": "Focused assessment for hypothyroidism covering symptom screening, TFT interpretation, treatment thresholds, Eltroxin dosing, and subclinical monitoring pathways.",
         "category": "Endocrinology",
         "content": {"sections": [

@@ -10,7 +10,7 @@ def seed_syncope():
     if not category: category = Category(name="Cardiovascular"); db.add(category); db.commit()
 
     t = {
-        "title": "Syncope / Transient Loss of Consciousness Assessment",
+        "title": "Syncope / Transient Loss of Consciousness",
         "description": "Focused assessment for syncope covering vasovagal vs cardiac vs seizure differentiation, orthostatic BP screening, ECG red flags, and driving advice.",
         "category": "Cardiovascular",
         "content": {"sections": [

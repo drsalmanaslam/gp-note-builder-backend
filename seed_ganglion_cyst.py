@@ -10,7 +10,7 @@ def seed_ganglion_cyst():
     if not category: category = Category(name="Musculoskeletal"); db.add(category); db.commit()
 
     t = {
-        "title": "Ganglion Cyst Assessment",
+        "title": "Ganglion Cyst",
         "description": "Focused assessment for ganglion cysts covering classic locations, watchful waiting vs intervention criteria, and referral for aspiration or excision.",
         "category": "Musculoskeletal",
         "content": {"sections": [

@@ -10,7 +10,7 @@ def seed_jaundice():
     if not category: category = Category(name="Gastroenterology"); db.add(category); db.commit()
 
     t = {
-        "title": "Jaundice Assessment",
+        "title": "Jaundice",
         "description": "Comprehensive template for jaundice covering pre-hepatic, hepatic, and post-hepatic causes, Courvoisier's sign, PBC screening, and investigation pathways.",
         "category": "Gastroenterology",
         "content": {"sections": [

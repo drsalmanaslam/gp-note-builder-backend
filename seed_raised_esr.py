@@ -10,7 +10,7 @@ def seed_raised_esr():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Raised ESR Assessment",
+        "title": "Raised ESR",
         "description": "Systematic assessment for raised ESR including targeted history to exclude serious pathology, investigation, and management plan with age-appropriate reference ranges.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

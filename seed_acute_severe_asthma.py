@@ -10,7 +10,7 @@ def seed_acute_severe_asthma():
     if not category: category = Category(name="Respiratory"); db.add(category); db.commit()
 
     t = {
-        "title": "Acute Severe Asthma Assessment",
+        "title": "Acute Severe Asthma",
         "description": "Emergency template for acute severe asthma covering BTS/SIGN severity criteria, nebulised bronchodilator protocol, steroid therapy, and A&E referral pathway.",
         "category": "Respiratory",
         "content": {"sections": [

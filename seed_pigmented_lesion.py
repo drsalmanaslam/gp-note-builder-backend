@@ -10,7 +10,7 @@ def seed_pigmented_lesion():
     if not category: category = Category(name="Dermatology"); db.add(category); db.commit()
 
     t = {
-        "title": "Pigmented Lesion / ?Melanoma Assessment",
+        "title": "Pigmented Lesion / ?Melanoma",
         "description": "Structured assessment for pigmented skin lesions using 7-point checklist/ABCDE, risk stratification, and 2WW referral criteria for suspected melanoma.",
         "category": "Dermatology",
         "content": {"sections": [

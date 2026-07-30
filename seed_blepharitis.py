@@ -10,7 +10,7 @@ def seed_blepharitis():
     if not category: category = Category(name="Ophthalmology"); db.add(category); db.commit()
 
     t = {
-        "title": "Blepharitis Assessment",
+        "title": "Blepharitis",
         "description": "Focused assessment for blepharitis and meibomian gland dysfunction covering lid hygiene routine, complications, and management escalation.",
         "category": "Ophthalmology",
         "content": {"sections": [

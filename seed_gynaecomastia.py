@@ -10,7 +10,7 @@ def seed_gynaecomastia():
     if not category: category = Category(name="Men's Health"); db.add(category); db.commit()
 
     t = {
-        "title": "Gynaecomastia Assessment",
+        "title": "Gynaecomastia",
         "description": "Focused assessment for gynaecomastia covering physiological vs pathological causes, medication review, red flags for malignancy, and investigation triggers.",
         "category": "Men's Health",
         "content": {"sections": [

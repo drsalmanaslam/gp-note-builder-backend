@@ -10,7 +10,7 @@ def seed_ibs():
     if not category: category = Category(name="Gastroenterology"); db.add(category); db.commit()
 
     t = {
-        "title": "Irritable Bowel Syndrome (IBS) Assessment",
+        "title": "Irritable Bowel Syndrome (IBS)",
         "description": "Focused assessment for IBS covering Rome IV diagnostic criteria, IBD red flags, dietary/lifestyle management, and pharmacotherapy by subtype.",
         "category": "Gastroenterology",
         "content": {"sections": [

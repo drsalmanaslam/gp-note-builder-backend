@@ -10,7 +10,7 @@ def seed_ankle_oedema():
     if not category: category = Category(name="Cardiovascular"); db.add(category); db.commit()
 
     t = {
-        "title": "Ankle Oedema Assessment",
+        "title": "Ankle Oedema",
         "description": "Focused assessment for bilateral ankle oedema covering cardiac, venous, renal, and hepatic causes with compression therapy and red flags.",
         "category": "Cardiovascular",
         "content": {"sections": [

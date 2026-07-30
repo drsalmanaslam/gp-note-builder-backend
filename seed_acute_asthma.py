@@ -10,7 +10,7 @@ def seed_acute_asthma():
     if not category: category = Category(name="Respiratory"); db.add(category); db.commit()
 
     t = {
-        "title": "Acute Moderate Asthma Assessment",
+        "title": "Acute Moderate Asthma",
         "description": "Emergency-focused template for acute moderate asthma attack covering severity classification, PEFR, bronchodilator therapy, steroid dosing, and admission criteria.",
         "category": "Respiratory",
         "content": {"sections": [

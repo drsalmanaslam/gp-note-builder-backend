@@ -10,7 +10,7 @@ def seed_developmental_milestones():
     if not category: category = Category(name="Paediatrics"); db.add(category); db.commit()
 
     t = {
-        "title": "Paediatric Developmental Milestones Assessment",
+        "title": "Paediatric Developmental Milestones",
         "description": "Comprehensive developmental assessment covering gross motor, fine motor, language, and social milestones with absolute red flag ages.",
         "category": "Paediatrics",
         "content": {"sections": [

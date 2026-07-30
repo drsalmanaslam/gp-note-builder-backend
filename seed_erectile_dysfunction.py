@@ -10,7 +10,7 @@ def seed_erectile_dysfunction():
     if not category: category = Category(name="Men's Health"); db.add(category); db.commit()
 
     t = {
-        "title": "Erectile Dysfunction Assessment",
+        "title": "Erectile Dysfunction",
         "description": "Focused assessment for erectile dysfunction covering organic vs psychogenic causes, cardiovascular risk, and PDE5 inhibitor prescribing.",
         "category": "Men's Health",
         "content": {"sections": [

@@ -10,7 +10,7 @@ def seed_hoarseness():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Hoarseness / Dysphonia Assessment",
+        "title": "Hoarseness / Dysphonia",
         "description": "Focused assessment for hoarseness with red flags for laryngeal malignancy, differential diagnosis, and ENT referral criteria.",
         "category": "ENT",
         "content": {"sections": [
