@@ -3,7 +3,7 @@ from app.models import User, Template, Category
 
 def seed_redeye_template():
     db = SessionLocal()
-    admin = db.query(User).filter(User.username == "admin").first()
+    admin = db.query(User).filter(User.username == "gpclinicaldirector@notebuilder").first()
     if not admin: print("Admin not found."); db.close(); return
     category = db.query(Category).filter(Category.name == "Ophthalmology").first()
     if not category: category = Category(name="Ophthalmology"); db.add(category); db.commit()

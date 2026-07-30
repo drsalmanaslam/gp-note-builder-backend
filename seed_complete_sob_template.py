@@ -5,7 +5,7 @@ from app.auth import get_password_hash
 def seed_complete_sob_template():
     db = SessionLocal()
     
-    admin = db.query(User).filter(User.username == "admin").first()
+    admin = db.query(User).filter(User.username == "gpclinicaldirector@notebuilder").first()
     if not admin:
         print("❌ Admin user not found")
         db.close()

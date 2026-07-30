@@ -5,11 +5,12 @@ from app.auth import get_password_hash
 def seed_all_templates():
     db = SessionLocal()
     
-    admin = db.query(User).filter(User.username == "admin").first()
-    if not admin:
-        print("❌ Admin user not found")
-        db.close()
-        return
+    # Use the main admin account instead of 'admin'
+admin = db.query(User).filter(User.username == "gpclinicaldirector@notebuilder").first()
+if not admin:
+    print("❌ Admin user not found (gpclinicaldirector@notebuilder)")
+    db.close()
+    return
     
     templates_data = [
         {

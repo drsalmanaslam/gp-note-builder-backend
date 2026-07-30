@@ -3,24 +3,13 @@ from app.models import User
 from app.auth import get_password_hash
 
 def seed_admin():
-    db = SessionLocal()
-    
-    # Check if admin exists
-    admin = db.query(User).filter(User.username == "admin").first()
+    # Check if main admin exists
+    admin = db.query(User).filter(User.username == "gpclinicaldirector@notebuilder").first()
     if not admin:
-        admin = User(
-            username="admin",
-            email="admin@example.com",
-            full_name="Admin User",
-            hashed_password=get_password_hash("admin123"),
-            role="admin",
-            is_active=True
-        )
-        db.add(admin)
-        db.commit()
-        print("✅ Admin user created!")
-    else:
-        print("Admin user already exists.")
+        # Don't create admin - it should already exist from main.py
+        print("⚠️ Main admin not found - will be created by main.py")
+        return
+    print("✅ Main admin exists")
     
     db.close()
 

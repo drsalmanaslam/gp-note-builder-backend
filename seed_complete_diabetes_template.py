@@ -6,7 +6,7 @@ def seed_diabetes_template():
     db = SessionLocal()
 
     # Get admin user
-    admin = db.query(User).filter(User.username == "admin").first()
+    admin = db.query(User).filter(User.username == "gpclinicaldirector@notebuilder").first()
     if not admin:
         print("Admin user not found. Please create admin first.")
         db.close()
