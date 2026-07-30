@@ -10,7 +10,7 @@ def seed_menieres():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Ménière's Disease Assessment",
+        "title": "Ménière's Disease",
         "description": "Focused assessment for Ménière's disease covering classic triad, vestibular schwannoma exclusion, medication trials, and lifestyle advice.",
         "category": "ENT",
         "content": {"sections": [

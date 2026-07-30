@@ -10,7 +10,7 @@ def seed_bells_palsy():
     if not category: category = Category(name="Neurology"); db.add(category); db.commit()
 
     t = {
-        "title": "Bell's Palsy Assessment",
+        "title": "Bell's Palsy",
         "description": "Emergency-focused assessment for acute facial palsy covering CVA exclusion, Ramsay Hunt screening, prednisolone prescribing, and eye protection priorities.",
         "category": "Neurology",
         "content": {"sections": [

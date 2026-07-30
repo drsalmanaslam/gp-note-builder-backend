@@ -10,7 +10,7 @@ def seed_vertigo_dizziness():
     if not category: category = Category(name="ENT"); db.add(category); db.commit()
 
     t = {
-        "title": "Vertigo / Dizziness Assessment (HINTS Exam)",
+        "title": "Vertigo / Dizziness (HINTS Exam)",
         "description": "Comprehensive dizziness assessment covering dizziness vs vertigo differentiation, HINTS examination for central causes, and posterior circulation stroke exclusion.",
         "category": "ENT",
         "content": {"sections": [

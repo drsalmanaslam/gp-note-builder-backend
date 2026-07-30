@@ -12,7 +12,7 @@ def seed_clinical_template():
         return
     
     template_data = {
-        "title": "Clinical Assessment - Chest Pain",
+        "title": "Clinical - Chest Pain",
         "description": "Complete chest pain assessment with all question types.",
         "category": "Cardiovascular",
         "content": {

@@ -10,7 +10,7 @@ def seed_thrombocytosis():
     if not category: category = Category(name="Abnormal Labs/Investigations"); db.add(category); db.commit()
 
     t = {
-        "title": "Thrombocytosis Assessment (Raised Platelets)",
+        "title": "Thrombocytosis (Raised Platelets)",
         "description": "Comprehensive assessment for thrombocytosis covering reactive vs primary causes, LEGO-C cancer screen, iron deficiency exclusion, and JAK2 referral pathway.",
         "category": "Abnormal Labs/Investigations",
         "content": {"sections": [

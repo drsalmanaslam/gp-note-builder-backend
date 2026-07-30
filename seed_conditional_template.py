@@ -12,7 +12,7 @@ def seed_conditional_template():
         return
     
     template_data = {
-        "title": "SOB Assessment (Conditional)",
+        "title": "SOB (Conditional)",
         "description": "SOB assessment with conditional questions based on SOB type.",
         "category": "Respiratory",
         "content": {

@@ -9,7 +9,7 @@ def seed_depression_template():
     if not category: category = Category(name="Mental Health"); db.add(category); db.commit()
 
     template_data = {
-        "title": "Depression Assessment (PHQ-9)",
+        "title": "Depression (PHQ-9)",
         "description": "Depression screening using PHQ-9 with suicide risk assessment and management plan.",
         "category": "Mental Health",
         "content": {"sections": [
