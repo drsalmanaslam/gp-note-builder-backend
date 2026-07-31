@@ -1,5 +1,6 @@
 from app.database import SessionLocal
 from app.models import User, Template, Category
+from datetime import datetime, timezone
 
 def seed_prostate_template():
     db = SessionLocal()
@@ -63,7 +64,16 @@ def seed_prostate_template():
     }
 
     existing = db.query(Template).filter(Template.title == template_data["title"], Template.created_by == admin.id).first()
-    if existing: db.delete(existing); db.commit()
+    
+    if existing:
+        # Update existing template instead of deleting
+        existing.description = t["description"]
+        existing.content = t["content"]
+        existing.category = t["category"]
+        existing.is_public = t["is_public"]
+        existing.updated_at = datetime.now(timezone.utc)
+        db.commit()
+        print(f"🔄 Updated: {t['title']}")
     new_template = Template(title=template_data["title"], description=template_data["description"], category=template_data["category"], content=template_data["content"], is_public=True, created_by=admin.id, version=1)
     db.add(new_template); db.commit()
     print(f"Template '{template_data['title']}' created!"); db.close()

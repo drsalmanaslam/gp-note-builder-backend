@@ -1,5 +1,6 @@
 from app.database import SessionLocal
 from app.models import User, Template, Category
+from datetime import datetime, timezone
 from app.auth import get_password_hash
 
 def seed_templates():

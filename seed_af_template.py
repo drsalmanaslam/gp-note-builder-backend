@@ -1,5 +1,6 @@
 from app.database import SessionLocal
 from app.models import User, Template, Category
+from datetime import datetime, timezone
 
 def seed_af_template():
     db = SessionLocal()
@@ -87,9 +88,16 @@ def seed_af_template():
     }
 
     existing = db.query(Template).filter(Template.title == template_data["title"], Template.created_by == admin.id).first()
+    
     if existing:
-        db.delete(existing)
+        # Update existing template instead of deleting
+        existing.description = t["description"]
+        existing.content = t["content"]
+        existing.category = t["category"]
+        existing.is_public = t["is_public"]
+        existing.updated_at = datetime.now(timezone.utc)
         db.commit()
+        print(f"🔄 Updated: {t['title']}")
 
     new_template = Template(
         title=template_data["title"], description=template_data["description"],
