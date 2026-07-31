@@ -172,32 +172,44 @@ def template_version():
 def sync_templates():
     import importlib, os
     global TEMPLATE_VERSION
-    
-    # Delete ALL existing templates first to prevent duplicates
     from app.database import SessionLocal
     from app.models import Template
-    db = SessionLocal()
-    db.query(Template).delete()
-    db.commit()
-    db.close()
-    print("All templates deleted. Re-seeding fresh...")
+    from datetime import datetime, timezone
     
-    # Now seed all fresh
+    db = SessionLocal()
+    
+    # Get existing template titles
+    existing_templates = db.query(Template).all()
+    existing_titles = {t.title for t in existing_templates}
+    
+    print(f"📊 Found {len(existing_templates)} existing templates")
+    
     results = []
+    added_count = 0
+    skipped_count = 0
+    
     seed_files = sorted([f.replace('.py', '') for f in os.listdir('.') if f.startswith('seed_') and f.endswith('.py')])
+    
     for seed_name in seed_files:
         try:
             mod = importlib.import_module(seed_name)
             for attr in dir(mod):
                 if attr.startswith('seed_') and callable(getattr(mod, attr)):
+                    # Run the seed function - it will handle existing vs new
                     getattr(mod, attr)()
                     results.append(f"✅ {seed_name}")
                     break
         except Exception as e:
             results.append(f"❌ {seed_name}: {str(e)[:50]}")
+    
+    db.close()
     TEMPLATE_VERSION = str(float(TEMPLATE_VERSION) + 0.1)
-    return {"synced": len(results), "version": TEMPLATE_VERSION}
-
+    
+    return {
+        "synced": len(results),
+        "version": TEMPLATE_VERSION,
+        "message": "Templates synced - existing templates preserved, only missing ones added"
+    }
 @app.get("/public/templates-with-ids")
 def public_templates_with_ids():
     from app.database import SessionLocal
@@ -207,3 +219,21 @@ def public_templates_with_ids():
     result = [{"id": t.id, "title": t.title, "category": t.category} for t in templates]
     db.close()
     return {"data": result, "total": len(result)}
+
+@app.get("/delete-admin")
+def delete_admin_user():
+    from app.database import SessionLocal
+    from app.models import User
+    
+    db = SessionLocal()
+    admin_user = db.query(User).filter(User.username == "admin").first()
+    
+    if admin_user:
+        db.delete(admin_user)
+        db.commit()
+        result = {"message": "✅ Admin user deleted successfully!"}
+    else:
+        result = {"message": "ℹ️ Admin user not found"}
+    
+    db.close()
+    return result
