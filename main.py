@@ -211,6 +211,35 @@ def sync_templates():
         "message": "Templates synced - existing templates preserved, only missing ones added"
     }
 
+@app.get("/fix-user-activity")
+def fix_user_activity():
+    from app.database import SessionLocal, engine
+    from app.models import UserActivity
+    from sqlalchemy import text
+    
+    db = SessionLocal()
+    
+    try:
+        # Check if table exists
+        result = db.execute(text("SELECT to_regclass('public.user_activities')"))
+        table_exists = result.scalar() is not None
+        
+        if table_exists:
+            # Drop the table
+            db.execute(text("DROP TABLE user_activities CASCADE"))
+            db.commit()
+            print("✅ Dropped existing user_activities table")
+        
+        # Recreate the table
+        UserActivity.__table__.create(engine, checkfirst=True)
+        print("✅ Recreated user_activities table with primary key")
+        
+        return {"message": "✅ UserActivity table fixed successfully!"}
+    except Exception as e:
+        db.rollback()
+        return {"error": str(e)}
+    finally:
+        db.close()
 
 @app.get("/public/templates-with-ids")
 def public_templates_with_ids():
