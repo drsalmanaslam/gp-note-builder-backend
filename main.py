@@ -230,6 +230,33 @@ def hard_reset_admin():
     db.close()
     return result
 
+@app.get("/remove-duplicates")
+def remove_duplicates():
+    from app.database import SessionLocal
+    from app.models import Template
+    from collections import defaultdict
+    
+    db = SessionLocal()
+    
+    templates = db.query(Template).all()
+    title_groups = defaultdict(list)
+    for t in templates:
+        title_groups[t.title].append(t)
+    
+    removed = 0
+    for title, items in title_groups.items():
+        if len(items) > 1:
+            sorted_items = sorted(items, key=lambda x: x.created_at)
+            for dup in sorted_items[1:]:
+                db.delete(dup)
+                removed += 1
+    
+    db.commit()
+    remaining = db.query(Template).count()
+    db.close()
+    
+    return {"removed": removed, "remaining": remaining}
+
 @app.get("/public/templates-with-ids")
 def public_templates_with_ids():
     from app.database import SessionLocal
