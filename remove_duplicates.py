@@ -13,12 +13,10 @@ title_groups = defaultdict(list)
 for t in templates:
     title_groups[t.title].append(t)
 
-duplicates_found = 0
 duplicates_removed = 0
 
 for title, items in title_groups.items():
     if len(items) > 1:
-        duplicates_found += len(items) - 1
         # Keep the first one (oldest), delete the rest
         sorted_items = sorted(items, key=lambda x: x.created_at)
         keep = sorted_items[0]
