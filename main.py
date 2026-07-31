@@ -211,25 +211,6 @@ def sync_templates():
         "message": "Templates synced - existing templates preserved, only missing ones added"
     }
 
-@app.get("/hard-reset-admin")
-def hard_reset_admin():
-    from app.database import SessionLocal
-    from app.models import User
-    
-    db = SessionLocal()
-    admin_users = db.query(User).filter(User.username == "admin").all()
-    
-    if admin_users:
-        for admin in admin_users:
-            db.delete(admin)
-        db.commit()
-        result = {"message": f"✅ {len(admin_users)} admin user(s) deleted permanently!"}
-    else:
-        result = {"message": "ℹ️ No admin users found"}
-    
-    db.close()
-    return result
-
 
 @app.get("/public/templates-with-ids")
 def public_templates_with_ids():
