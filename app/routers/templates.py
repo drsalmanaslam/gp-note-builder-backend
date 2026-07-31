@@ -147,20 +147,20 @@ def update_template(
         # Get template - ADD THIS to check for deleted templates
         db_template = db.query(Template).filter(
             Template.id == template_id,
-            Template.deleted_at.is_(None)  # ADD THIS LINE
+            Template.deleted_at.is_(None)
         ).first()
         
         if not db_template:
             raise HTTPException(status_code=404, detail="Template not found")
         
         # PERMISSION CHECK - UPDATE THIS to use admin email
-        ADMIN_EMAIL = "gpclinicaldirector@notebuilder"  # ADD THIS LINE
-        is_admin = current_user.role == "admin" or current_user.email == ADMIN_EMAIL  # ADD THIS LINE
+        ADMIN_EMAIL = "gpclinicaldirector@notebuilder"
+        is_admin = current_user.role == "admin" or current_user.email == ADMIN_EMAIL
         
-        if db_template.created_by != current_user.id and not is_admin:  # CHANGE THIS LINE
+        if db_template.created_by != current_user.id and not is_admin:
             raise HTTPException(status_code=403, detail="Access denied - you don't own this template")
         
-        # Track what's being changed for logging - ADD THIS BLOCK
+        # Track what's being changed for logging
         changes = []
         
         # Save version history if content is changing
@@ -173,62 +173,61 @@ def update_template(
             )
             db.add(version)
             db_template.version += 1
-            changes.append("content")  # ADD THIS LINE
+            changes.append("content")
         
-        # Update fields with logging - UPDATE these blocks
+        # Update fields
         if template_update.title is not None:
-            old_title = db_template.title  # ADD THIS LINE
+            old_title = db_template.title
             db_template.title = template_update.title
-            if old_title != template_update.title:  # ADD THIS LINE
-                changes.append("title")  # ADD THIS LINE
+            if old_title != template_update.title:
+                changes.append("title")
                 
         if template_update.description is not None:
-            old_desc = db_template.description  # ADD THIS LINE
+            old_desc = db_template.description
             db_template.description = template_update.description
-            if old_desc != template_update.description:  # ADD THIS LINE
-                changes.append("description")  # ADD THIS LINE
+            if old_desc != template_update.description:
+                changes.append("description")
                 
         if template_update.category is not None:
-            old_cat = db_template.category  # ADD THIS LINE
+            old_cat = db_template.category
             db_template.category = template_update.category
-            if old_cat != template_update.category:  # ADD THIS LINE
-                changes.append("category")  # ADD THIS LINE
+            if old_cat != template_update.category:
+                changes.append("category")
                 
         if template_update.content is not None:
-            old_content = db_template.content  # ADD THIS LINE
+            old_content = db_template.content
             db_template.content = template_update.content
-            if old_content != template_update.content:  # ADD THIS LINE
-                changes.append("content")  # ADD THIS LINE
+            if old_content != template_update.content:
+                changes.append("content")
                 
         if template_update.is_public is not None:
-            old_public = db_template.is_public  # ADD THIS LINE
+            old_public = db_template.is_public
             db_template.is_public = template_update.is_public
-            if old_public != template_update.is_public:  # ADD THIS LINE
-                changes.append("is_public")  # ADD THIS LINE
+            if old_public != template_update.is_public:
+                changes.append("is_public")
         
-        # Update timestamp - ADD THIS LINE
+        # Update timestamp
         db_template.updated_at = datetime.now(timezone.utc)
         
         # Commit changes
         db.commit()
         db.refresh(db_template)
         
-       # Log activity
-if changes:
-    activity = UserActivity(
-        user_id=current_user.id,
-        template_id=db_template.id,
-        action="update"
-        # details field removed - it doesn't exist in the model
-    )
-    db.add(activity)
-    db.commit()
+        # Log activity
+        if changes:
+            activity = UserActivity(
+                user_id=current_user.id,
+                template_id=db_template.id,
+                action="update",
+            )
+            db.add(activity)
+            db.commit()
         
         return db_template
         
-    except HTTPException:  # ADD THIS BLOCK
+    except HTTPException:
         raise
-    except Exception as e:  # ADD THIS BLOCK
+    except Exception as e:
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
