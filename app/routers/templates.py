@@ -213,16 +213,16 @@ def update_template(
         db.commit()
         db.refresh(db_template)
         
-        # Log activity - ADD THIS BLOCK
-        if changes:
-            activity = UserActivity(
-                user_id=current_user.id,
-                template_id=db_template.id,
-                action="update",
-                details=f"Updated fields: {', '.join(changes)}"
-            )
-            db.add(activity)
-            db.commit()
+       # Log activity
+if changes:
+    activity = UserActivity(
+        user_id=current_user.id,
+        template_id=db_template.id,
+        action="update"
+        # details field removed - it doesn't exist in the model
+    )
+    db.add(activity)
+    db.commit()
         
         return db_template
         
