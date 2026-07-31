@@ -220,13 +220,13 @@ def fix_user_activity():
     db = SessionLocal()
     
     try:
-        # Check if table exists
-        result = db.execute(text("SELECT to_regclass('public.user_activities')"))
-        table_exists = result.scalar() is not None
+        # SQLite check - see if table exists
+        result = db.execute(text("SELECT name FROM sqlite_master WHERE type='table' AND name='user_activities'"))
+        table_exists = result.fetchone() is not None
         
         if table_exists:
             # Drop the table
-            db.execute(text("DROP TABLE user_activities CASCADE"))
+            db.execute(text("DROP TABLE user_activities"))
             db.commit()
             print("✅ Dropped existing user_activities table")
         
