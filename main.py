@@ -219,21 +219,3 @@ def public_templates_with_ids():
     result = [{"id": t.id, "title": t.title, "category": t.category} for t in templates]
     db.close()
     return {"data": result, "total": len(result)}
-
-@app.get("/delete-admin")
-def delete_admin_user():
-    from app.database import SessionLocal
-    from app.models import User
-    
-    db = SessionLocal()
-    admin_user = db.query(User).filter(User.username == "admin").first()
-    
-    if admin_user:
-        db.delete(admin_user)
-        db.commit()
-        result = {"message": "✅ Admin user deleted successfully!"}
-    else:
-        result = {"message": "ℹ️ Admin user not found"}
-    
-    db.close()
-    return result
