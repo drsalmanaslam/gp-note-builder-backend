@@ -211,23 +211,6 @@ def sync_templates():
         "message": "Templates synced - existing templates preserved, only missing ones added"
     }
 
-@app.get("/delete-admin-now")
-def delete_admin_now():
-    from app.database import SessionLocal
-    from app.models import User
-    
-    db = SessionLocal()
-    admin_user = db.query(User).filter(User.username == "admin").first()
-    
-    if admin_user:
-        db.delete(admin_user)
-        db.commit()
-        result = {"message": "✅ Admin user deleted successfully!"}
-    else:
-        result = {"message": "ℹ️ Admin user not found"}
-    
-    db.close()
-    return result
 
 @app.get("/public/templates-with-ids")
 def public_templates_with_ids():
