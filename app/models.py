@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Text, JSON, Table
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+from datetime import datetime, timezone
 from app.database import Base
 
 # Association table for many-to-many relationship between users and favourite templates
@@ -22,10 +23,10 @@ class User(Base):
     hashed_password = Column(String(255), nullable=False)
     is_active = Column(Boolean, default=True)
     role = Column(String(20), default='user')
-    subscription_status = Column(String(20), default='inactive')  # inactive, trialing, active, cancelled, past_due
+    subscription_status = Column(String(20), default='inactive')
     stripe_customer_id = Column(String(100), unique=True, nullable=True)
     stripe_subscription_id = Column(String(100), unique=True, nullable=True)
-    subscription_plan = Column(String(50), nullable=True)  # basic, pro, enterprise
+    subscription_plan = Column(String(50), nullable=True)
     subscription_started = Column(DateTime(timezone=True), nullable=True)
     subscription_expires = Column(DateTime(timezone=True), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -37,6 +38,22 @@ class User(Base):
     
     def __repr__(self):
         return f"<User(id={self.id}, username='{self.username}', email='{self.email}')>"
+
+class Category(Base):
+    __tablename__ = "categories"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(50), unique=True, nullable=False, index=True)
+    icon = Column(String(50))
+    description = Column(Text)
+    color = Column(String(20), default='#3B82F6')
+    is_active = Column(Boolean, default=True)
+    template_count = Column(Integer, default=0)  # ← This is the only Category class now
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    
+    def __repr__(self):
+        return f"<Category(name='{self.name}')>"
 
 class Template(Base):
     __tablename__ = "templates"
@@ -52,13 +69,11 @@ class Template(Base):
     created_by = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    deleted_at = Column(DateTime(timezone=True), nullable=True)  # ← ADD THIS LINE
+    deleted_at = Column(DateTime(timezone=True), nullable=True)
     
     category_id = Column(Integer, ForeignKey('categories.id', ondelete='SET NULL'), nullable=True)
     
-    # ... rest of the code
-    
-    # NEW: Share fields
+    # Share fields
     share_token = Column(String(100), unique=True, index=True, nullable=True)
     share_created_at = Column(DateTime(timezone=True))
     share_views = Column(Integer, default=0)
@@ -67,7 +82,7 @@ class Template(Base):
     # Relationships
     creator = relationship("User", back_populates="templates")
     favourited_by = relationship("User", secondary=user_favourites, back_populates="favourite_templates")
-    category_rel = relationship("Category", backref="templates")  # NEW: Relationship to Category
+    category_rel = relationship("Category", backref="templates")
 
 class TemplateVersion(Base):
     __tablename__ = "template_versions"
@@ -84,28 +99,14 @@ class TemplateVersion(Base):
     template = relationship("Template", backref="versions")
     creator = relationship("User")
 
-class Category(Base):
-    __tablename__ = "categories"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String(50), unique=True, nullable=False, index=True)
-    icon = Column(String(50))
-    description = Column(Text)
-    color = Column(String(20), default='#3B82F6')  # NEW: Color for category
-    is_active = Column(Boolean, default=True)      # NEW: Soft delete
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    
-    def __repr__(self):
-        return f"<Category(name='{self.name}')>"
 class UserActivity(Base):
     __tablename__ = "user_activities"
     
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
-    template_id = Column(Integer, ForeignKey('templates.id', ondelete='CASCADE'), nullable=False)
-    action = Column(String(50), nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    user_id = Column(Integer, ForeignKey("users.id"))
+    template_id = Column(Integer, ForeignKey("templates.id"))
+    action = Column(String)
+    created_at = Column(DateTime, default=datetime.utcnow)
     
     # Relationships
     user = relationship("User")
@@ -128,4 +129,3 @@ class UserPreference(Base):
     
     def __repr__(self):
         return f"<UserPreference(user_id={self.user_id}, theme='{self.theme}')>"
-
