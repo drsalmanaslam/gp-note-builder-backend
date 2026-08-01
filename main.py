@@ -246,6 +246,10 @@ def fix_user_activity():
     finally:
         db.close()
 
+@app.get("/public-test")
+def public_test():
+    return {"message": "Backend is reachable!", "status": "ok"}
+
 @app.get("/public/templates-with-ids")
 def public_templates_with_ids():
     from app.database import SessionLocal
