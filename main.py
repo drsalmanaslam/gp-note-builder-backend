@@ -384,6 +384,49 @@ def fix_render_db():
     finally:
         conn.close()
 
+@app.get("/cleanup-duplicates")
+def cleanup_duplicates():
+    """Remove duplicate templates - keep the one with highest view_count"""
+    from app.database import SessionLocal
+    from app.models import Template
+    from sqlalchemy import func
+    
+    db = SessionLocal()
+    
+    # Find duplicate titles
+    duplicates = db.query(
+        Template.title, 
+        func.count(Template.id).label('count')
+    ).group_by(Template.title).having(func.count(Template.id) > 1).all()
+    
+    if not duplicates:
+        db.close()
+        return {"message": "✅ No duplicates found!", "deleted": 0}
+    
+    total_deleted = 0
+    results = []
+    for title, count in duplicates:
+        copies = db.query(Template).filter(Template.title == title).order_by(
+            Template.view_count.desc(), 
+            Template.updated_at.desc()
+        ).all()
+        
+        keep = copies[0]
+        for template in copies[1:]:
+            results.append(f"Deleted: ID={template.id}, view_count={template.view_count}")
+            db.delete(template)
+            total_deleted += 1
+        
+        results.append(f"Kept: ID={keep.id}, view_count={keep.view_count}")
+    
+    db.commit()
+    db.close()
+    
+    return {
+        "message": f"✅ Deleted {total_deleted} duplicate templates",
+        "details": results
+    }
+
 @app.get("/public/templates-with-ids")
 def public_templates_with_ids():
     from app.database import SessionLocal
