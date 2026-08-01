@@ -297,6 +297,28 @@ def add_template_count_column():
     except Exception as e:
         return {"error": str(e)}
 
+@app.get("/public-categories")
+def public_categories():
+    try:
+        from app.database import SessionLocal
+        from app.models import Category, Template
+        
+        db = SessionLocal()
+        categories = db.query(Category).all()
+        result = []
+        for cat in categories:
+            # Count templates directly from the Template table
+            count = db.query(Template).filter(Template.category == cat.name).count()
+            result.append({
+                "name": cat.name,
+                "template_count": count,
+                "id": cat.id
+            })
+        db.close()
+        return {"categories": result}
+    except Exception as e:
+        return {"error": str(e)}, 500
+
 @app.get("/public/templates-with-ids")
 def public_templates_with_ids():
     from app.database import SessionLocal
