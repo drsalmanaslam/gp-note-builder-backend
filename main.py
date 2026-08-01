@@ -319,6 +319,34 @@ def public_categories():
     except Exception as e:
         return {"error": str(e)}, 500
 
+@app.get("/fix-template-count")
+def fix_template_count():
+    import sqlite3
+    import os
+    
+    try:
+        db_path = os.environ.get('DATABASE_URL', 'gp_notes.db')
+        if db_path and db_path.startswith('sqlite:///'):
+            db_path = db_path.replace('sqlite:///', '')
+        
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        cursor.execute("PRAGMA table_info(categories)")
+        columns = [row[1] for row in cursor.fetchall()]
+        
+        if 'template_count' not in columns:
+            cursor.execute("ALTER TABLE categories ADD COLUMN template_count INTEGER DEFAULT 0")
+            conn.commit()
+            result = {"message": "✅ Added template_count column"}
+        else:
+            result = {"message": "✅ Column already exists"}
+        
+        conn.close()
+        return result
+    except Exception as e:
+        return {"error": str(e)}
+
 @app.get("/public/templates-with-ids")
 def public_templates_with_ids():
     from app.database import SessionLocal
