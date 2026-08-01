@@ -250,6 +250,26 @@ def fix_user_activity():
 def public_test():
     return {"message": "Backend is reachable!", "status": "ok"}
 
+@app.get("/public-categories")
+def public_categories():
+    from app.database import SessionLocal
+    from app.models import Category, Template
+    
+    db = SessionLocal()
+    categories = db.query(Category).all()
+    result = []
+    for cat in categories:
+        count = db.query(Template).filter(Template.category == cat.name).count()
+        result.append({
+            "name": cat.name,
+            "template_count": count,
+            "id": cat.id,
+            "icon": cat.icon,
+            "color": cat.color
+        })
+    db.close()
+    return {"categories": result}
+
 @app.get("/public/templates-with-ids")
 def public_templates_with_ids():
     from app.database import SessionLocal
