@@ -274,28 +274,26 @@ def public_categories():
 
 @app.get("/add-template-count-column")
 def add_template_count_column():
-    import sqlite3
     try:
-        # Use the Render database path
-        import os
-        db_path = os.environ.get('DATABASE_URL', 'gp_notes.db')
-        if db_path and db_path.startswith('sqlite:///'):
-            db_path = db_path.replace('sqlite:///', '')
+        from app.database import engine
+        from sqlalchemy import text
         
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-        cursor.execute('PRAGMA table_info(categories)')
-        columns = [row[1] for row in cursor.fetchall()]
-        
-        if 'template_count' not in columns:
-            cursor.execute('ALTER TABLE categories ADD COLUMN template_count INTEGER DEFAULT 0')
-            conn.commit()
-            result = {"message": "✅ Added template_count column"}
-        else:
-            result = {"message": "✅ Column already exists"}
-        
-        conn.close()
-        return result
+        # Use the engine's connection directly
+        with engine.connect() as conn:
+            # Try to add the column using SQLAlchemy's built-in method
+            try:
+                # For SQLite
+                conn.execute(text("ALTER TABLE categories ADD COLUMN template_count INTEGER DEFAULT 0"))
+                conn.commit()
+                return {"message": "✅ Column added successfully"}
+            except Exception as e:
+                # Check if column already exists
+                result = conn.execute(text("PRAGMA table_info(categories)"))
+                columns = [row[1] for row in result]
+                if 'template_count' in columns:
+                    return {"message": "✅ Column already exists"}
+                else:
+                    return {"error": str(e)}
     except Exception as e:
         return {"error": str(e)}
 
