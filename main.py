@@ -347,6 +347,35 @@ def fix_template_count():
     except Exception as e:
         return {"error": str(e)}
 
+@app.get("/fix-render-db")
+def fix_render_db():
+    import sqlite3
+    import os
+    
+    db_path = os.environ.get('DATABASE_URL', 'gp_notes.db')
+    
+    if db_path and db_path.startswith('sqlite:///'):
+        db_path = db_path.replace('sqlite:///', '')
+    
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        
+        cursor.execute("PRAGMA table_info(categories)")
+        columns = [row[1] for row in cursor.fetchall()]
+        
+        if 'template_count' not in columns:
+            cursor.execute("ALTER TABLE categories ADD COLUMN template_count INTEGER DEFAULT 0")
+            conn.commit()
+            return {"message": "✅ Column added successfully to Render database!"}
+        else:
+            return {"message": "✅ Column already exists!"}
+        
+    except Exception as e:
+        return {"error": str(e)}
+    finally:
+        conn.close()
+
 @app.get("/public/templates-with-ids")
 def public_templates_with_ids():
     from app.database import SessionLocal
