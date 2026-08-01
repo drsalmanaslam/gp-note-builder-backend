@@ -388,45 +388,54 @@ def fix_render_db():
 def cleanup_duplicates():
     """Remove duplicate templates - keep the one with highest view_count"""
     from app.database import SessionLocal
-    from app.models import Template
+    from app.models import Template, UserActivity, TemplateVersion, user_favourites
     from sqlalchemy import func
     
     db = SessionLocal()
     
-    # Find duplicate titles
-    duplicates = db.query(
-        Template.title, 
-        func.count(Template.id).label('count')
-    ).group_by(Template.title).having(func.count(Template.id) > 1).all()
-    
-    if not duplicates:
+    try:
+        # Find duplicate titles
+        duplicates = db.query(
+            Template.title, 
+            func.count(Template.id).label('count')
+        ).group_by(Template.title).having(func.count(Template.id) > 1).all()
+        
+        if not duplicates:
+            return {"message": "✅ No duplicates found!", "deleted": 0}
+        
+        total_deleted = 0
+        results = []
+        
+        for title, count in duplicates:
+            copies = db.query(Template).filter(Template.title == title).order_by(
+                Template.view_count.desc(), 
+                Template.updated_at.desc()
+            ).all()
+            
+            keep = copies[0]
+            results.append(f"Title: '{title}' - Keeping ID={keep.id} (views={keep.view_count})")
+            
+            for template in copies[1:]:
+                # Delete related records first
+                db.query(UserActivity).filter(UserActivity.template_id == template.id).delete()
+                db.query(TemplateVersion).filter(TemplateVersion.template_id == template.id).delete()
+                db.execute(user_favourites.delete().where(user_favourites.c.template_id == template.id))
+                
+                # Now delete the template
+                db.delete(template)
+                results.append(f"  Deleted ID={template.id} (views={template.view_count})")
+                total_deleted += 1
+        
+        db.commit()
+        return {
+            "message": f"✅ Deleted {total_deleted} duplicate templates",
+            "details": results
+        }
+    except Exception as e:
+        db.rollback()
+        return {"error": str(e)}
+    finally:
         db.close()
-        return {"message": "✅ No duplicates found!", "deleted": 0}
-    
-    total_deleted = 0
-    results = []
-    for title, count in duplicates:
-        copies = db.query(Template).filter(Template.title == title).order_by(
-            Template.view_count.desc(), 
-            Template.updated_at.desc()
-        ).all()
-        
-        keep = copies[0]
-        for template in copies[1:]:
-            results.append(f"Deleted: ID={template.id}, view_count={template.view_count}")
-            db.delete(template)
-            total_deleted += 1
-        
-        results.append(f"Kept: ID={keep.id}, view_count={keep.view_count}")
-    
-    db.commit()
-    db.close()
-    
-    return {
-        "message": f"✅ Deleted {total_deleted} duplicate templates",
-        "details": results
-    }
-
 @app.get("/public/templates-with-ids")
 def public_templates_with_ids():
     from app.database import SessionLocal
