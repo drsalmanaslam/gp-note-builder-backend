@@ -1,18 +1,24 @@
-import sqlite3
+"""Add template_count column to categories
 
-# Connect to the database
-conn = sqlite3.connect('gp_notes.db')
-cursor = conn.cursor()
+Revision ID: [will be auto-generated]
+Revises: d06268db54ba
+Create Date: [will be auto-generated]
 
-# Check if column exists
-cursor.execute("PRAGMA table_info(categories)")
-columns = [row[1] for row in cursor.fetchall()]
+"""
+from alembic import op
+import sqlalchemy as sa
 
-if 'template_count' not in columns:
-    cursor.execute("ALTER TABLE categories ADD COLUMN template_count INTEGER DEFAULT 0")
-    conn.commit()
-    print('✅ Added template_count column to categories table')
-else:
-    print('✅ template_count column already exists')
+# revision identifiers, used by Alembic.
+revision = '56237a6b04b8'  # ← This will be generated
+down_revision = 'd06268db54ba'
+branch_labels = None
+depends_on = None
 
-conn.close()
+
+def upgrade():
+    # Only add the column, don't touch anything else
+    op.add_column('categories', sa.Column('template_count', sa.Integer(), nullable=True, server_default='0'))
+
+
+def downgrade():
+    op.drop_column('categories', 'template_count')

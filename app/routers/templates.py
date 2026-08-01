@@ -352,28 +352,42 @@ def get_recent_templates(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user)
 ):
-    """Get recently used templates"""
-    activities = db.query(UserActivity).filter(
+    """Get recently used templates - deduplicated by template_id"""
+    from sqlalchemy import distinct
+    
+    # Get distinct template IDs from user's view activities, most recent first
+    distinct_activities = db.query(
+        UserActivity.template_id,
+        func.max(UserActivity.created_at).label('last_viewed')
+    ).filter(
         UserActivity.user_id == current_user.id,
         UserActivity.action == "view"
-    ).order_by(UserActivity.created_at.desc()).limit(limit).all()
+    ).group_by(
+        UserActivity.template_id
+    ).order_by(
+        func.max(UserActivity.created_at).desc()
+    ).limit(limit).all()
     
-    template_ids = [activity.template_id for activity in activities]
-    templates = db.query(Template).filter(Template.id.in_(template_ids)).all()
+    # Extract unique template IDs in order
+    template_ids = [activity.template_id for activity in distinct_activities]
+    
+    # Fetch the actual templates
+    templates = db.query(Template).filter(
+        Template.id.in_(template_ids),
+        Template.deleted_at.is_(None)
+    ).all()
     
     template_map = {t.id: t for t in templates}
     result = []
-    seen_ids = set()
-    for activity in activities:
-        if activity.template_id in template_map and activity.template_id not in seen_ids:
-            seen_ids.add(activity.template_id)
-            template = template_map[activity.template_id]
+    for activity in distinct_activities:
+        tid = activity.template_id
+        if tid in template_map:
+            template = template_map[tid]
             template_dict = TemplateResponse.model_validate(template)
             template_dict.is_favourite = template in current_user.favourite_templates
             result.append(template_dict)
-
+    
     return result
-
 # ============ TEMPLATE VERSIONS ============
 
 @router.get("/{template_id}/versions", response_model=List[TemplateVersionResponse])

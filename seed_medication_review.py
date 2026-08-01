@@ -77,20 +77,20 @@ def seed_medication_review():
         "is_public": True
     }
 
-    existing = db.query(Template).filter(Template.title == t["title"], Template.created_by == admin.id).first()
-    
-    if existing:
-        # Update existing template instead of deleting
-        existing.description = t["description"]
-        existing.content = t["content"]
-        existing.category = t["category"]
-        existing.is_public = t["is_public"]
-        existing.updated_at = datetime.now(timezone.utc)
-        db.commit()
-        print(f"🔄 Updated: {t['title']}")
-    new_t = Template(title=t["title"], description=t["description"], category=t["category"], content=t["content"], is_public=True, created_by=admin.id, version=1)
-    db.add(new_t); db.commit()
-    print(f"Template '{t['title']}' created with {len(t['content']['sections'])} sections!"); db.close()
+existing = db.query(Template).filter(Template.title == t["title"], Template.created_by == admin.id).first()
+
+if existing:
+    # Delete existing template (full replacement)
+    db.delete(existing)
+    db.commit()
+    print(f"🗑️ Removed old: {t['title']}")
+
+# Create fresh template
+new_t = Template(title=t["title"], description=t["description"], category=t["category"], content=t["content"], is_public=True, created_by=admin.id, version=1)
+db.add(new_t)
+db.commit()
+print(f"✅ Template '{t['title']}' created with {len(t['content']['sections'])} sections!")
+db.close()
 
 if __name__ == "__main__":
     seed_medication_review()

@@ -183,15 +183,21 @@ def sync_templates():
     
     db = SessionLocal()
     
-    # Get existing template titles
-    existing_templates = db.query(Template).all()
-    existing_titles = {t.title for t in existing_templates}
+    # Get existing template titles - ONLY sync if no templates exist (first run)
+    existing_count = db.query(Template).count()
     
-    print(f"📊 Found {len(existing_templates)} existing templates")
+    if existing_count > 0:
+        db.close()
+        return {
+            "synced": 0,
+            "version": TEMPLATE_VERSION,
+            "message": f"✅ {existing_count} templates already exist. Skipping sync to preserve edits."
+        }
+    
+    print(f"📊 No templates found. Running initial seed...")
     
     results = []
     added_count = 0
-    skipped_count = 0
     
     seed_files = sorted([f.replace('.py', '') for f in os.listdir('.') if f.startswith('seed_') and f.endswith('.py')])
     
@@ -200,9 +206,10 @@ def sync_templates():
             mod = importlib.import_module(seed_name)
             for attr in dir(mod):
                 if attr.startswith('seed_') and callable(getattr(mod, attr)):
-                    # Run the seed function - it will handle existing vs new
+                    # Run the seed function - only runs when database is empty
                     getattr(mod, attr)()
                     results.append(f"✅ {seed_name}")
+                    added_count += 1
                     break
         except Exception as e:
             results.append(f"❌ {seed_name}: {str(e)[:50]}")
@@ -211,9 +218,10 @@ def sync_templates():
     TEMPLATE_VERSION = str(float(TEMPLATE_VERSION) + 0.1)
     
     return {
-        "synced": len(results),
+        "synced": added_count,
         "version": TEMPLATE_VERSION,
-        "message": "Templates synced - existing templates preserved, only missing ones added"
+        "message": f"Initial seeding complete - {added_count} templates added.",
+        "details": results[:5]  # Show first 5 results for debugging
     }
 
 @app.get("/fix-user-activity")

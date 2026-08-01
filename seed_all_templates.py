@@ -1,16 +1,16 @@
 from app.database import SessionLocal
 from app.models import User, Template, Category
-from app.auth import get_password_hash
+from datetime import datetime, timezone
 
 def seed_all_templates():
     db = SessionLocal()
     
     # Use the main admin account instead of 'admin'
-admin = db.query(User).filter(User.username == "gpclinicaldirector@notebuilder").first()
-if not admin:
-    print("❌ Admin user not found (gpclinicaldirector@notebuilder)")
-    db.close()
-    return
+    admin = db.query(User).filter(User.username == "gpclinicaldirector@notebuilder").first()
+    if not admin:
+        print("❌ Admin user not found (gpclinicaldirector@notebuilder)")
+        db.close()
+        return
     
     templates_data = [
         {
@@ -258,36 +258,36 @@ if not admin:
             db.commit()
             db.refresh(category)
         
-        # Check if template exists - if so, delete and recreate
+        # Check if template exists - if so, update
         existing = db.query(Template).filter(
             Template.title == template_data["title"],
             Template.created_by == admin.id
         ).first()
         
         if existing:
-    # Update existing template instead of deleting
-    existing.description = template_data["description"]
-    existing.content = template_data["content"]
-    existing.category = template_data["category"]
-    existing.is_public = template_data["is_public"]
-    existing.updated_at = datetime.now(timezone.utc)
-    db.commit()
-    print(f"🔄 Updated: '{template_data['title']}'")
-else:
-    # Create template with proper structure
-    new_template = Template(
-        title=template_data["title"],
-        description=template_data["description"],
-        category=template_data["category"],
-        content=template_data["content"],
-        is_public=template_data["is_public"],
-        created_by=admin.id,
-        version=1
-    )
-    db.add(new_template)
-    db.commit()
-    db.refresh(new_template)
-    print(f"✅ Template '{template_data['title']}' created with questions")
+            # Update existing template instead of deleting
+            existing.description = template_data["description"]
+            existing.content = template_data["content"]
+            existing.category = template_data["category"]
+            existing.is_public = template_data["is_public"]
+            existing.updated_at = datetime.now(timezone.utc)
+            db.commit()
+            print(f"🔄 Updated: '{template_data['title']}'")
+        else:
+            # Create template with proper structure
+            new_template = Template(
+                title=template_data["title"],
+                description=template_data["description"],
+                category=template_data["category"],
+                content=template_data["content"],
+                is_public=template_data["is_public"],
+                created_by=admin.id,
+                version=1
+            )
+            db.add(new_template)
+            db.commit()
+            db.refresh(new_template)
+            print(f"✅ Template '{template_data['title']}' created with questions")
     
     print("\n🎉 All templates seeded successfully!")
     
