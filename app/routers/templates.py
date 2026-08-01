@@ -688,4 +688,4 @@ def import_template(
     db.commit()
     db.refresh(db_template)
 
-    return db_template
+    return db_template 
