@@ -5,7 +5,7 @@ from slowapi.errors import RateLimitExceeded
 from app.routers import categories, notes
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
-from app.routers import users, products, items, auth, templates
+from app.routers import users, products, items, auth, templates, password_reset
 from app.database import engine, Base
 import os
 
@@ -115,6 +115,7 @@ app.include_router(auth.router)
 app.include_router(templates.router)
 app.include_router(notes.router)
 app.include_router(categories.router)
+app.include_router(password_reset.router)
 
 @app.get("/")
 def read_root():
