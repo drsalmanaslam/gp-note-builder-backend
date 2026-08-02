@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -14,16 +14,16 @@ Base.metadata.create_all(bind=engine)
 
 # Auto-seed templates on first startup (only if database is empty)
 from app.database import SessionLocal
-from app.models import Template
+from app.models import Template, User
+from app.auth import get_password_hash, get_current_admin
 import importlib
-import os
 
 db_check = SessionLocal()
 existing_templates = db_check.query(Template).count()
 db_check.close()
 
 if existing_templates == 0:
-    print("No templates found. Auto-seeding all 107 templates...")
+    print("No templates found. Auto-seeding all templates...")
     seed_files = sorted([f.replace('.py', '') for f in os.listdir('.') if f.startswith('seed_') and f.endswith('.py')])
     for seed_name in seed_files:
         try:
@@ -39,12 +39,8 @@ else:
     print(f"{existing_templates} templates already exist. Skipping seed.")
 
 # Ensure admin has lifetime access
-from app.database import SessionLocal
-from app.models import User
-from app.auth import get_password_hash, get_current_admin
 db = SessionLocal()
 
-import os
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "gpclinicaldirector@notebuilder")
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "admin@gpnotebuilder.com")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "@GPLenovo!notes")
@@ -92,6 +88,7 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["*"],
 )
+
 class CSPMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request, call_next):
         response = await call_next(request)
@@ -146,6 +143,7 @@ def seed_all(current_user: User = Depends(get_current_admin)):
             results.append(f"❌ {seed_name}: {str(e)[:50]}")
     
     return {"results": results}
+
 @app.post("/change-password")
 def change_password(username: str, old_password: str, new_password: str):
     from app.database import SessionLocal
@@ -171,8 +169,7 @@ def public_templates():
     db.close()
     return {"data": titles}
 
-# Template version tracking
-TEMPLATE_VERSION = "1.0"  # Increment this when you update seeds
+TEMPLATE_VERSION = "1.0"
 
 @app.get("/api/template-version")
 def template_version():
@@ -180,9 +177,7 @@ def template_version():
 
 @app.get("/api/sync-templates")
 def sync_templates(current_user: User = Depends(get_current_admin)):
-    """Admin only: Add new templates only. Never updates existing ones."""
-    import importlib, os
-    global TEMPLATE_VERSION
+    """Admin only: Reports template count. Use /seed-all to add new templates."""
     from app.database import SessionLocal
     from app.models import Template
     
@@ -195,36 +190,6 @@ def sync_templates(current_user: User = Depends(get_current_admin)):
         "version": TEMPLATE_VERSION,
         "message": f"✅ {existing_count} templates in database. Use /seed-all to add new templates."
     }
-    
-    print(f"📊 No templates found. Running initial seed...")
-    
-    results = []
-    added_count = 0
-    
-    seed_files = sorted([f.replace('.py', '') for f in os.listdir('.') if f.startswith('seed_') and f.endswith('.py')])
-    
-    for seed_name in seed_files:
-        try:
-            mod = importlib.import_module(seed_name)
-            for attr in dir(mod):
-                if attr.startswith('seed_') and callable(getattr(mod, attr)):
-                    # Run the seed function - only runs when database is empty
-                    getattr(mod, attr)()
-                    results.append(f"✅ {seed_name}")
-                    added_count += 1
-                    break
-        except Exception as e:
-            results.append(f"❌ {seed_name}: {str(e)[:50]}")
-    
-    db.close()
-    TEMPLATE_VERSION = str(float(TEMPLATE_VERSION) + 0.1)
-    
-    return {
-        "synced": added_count,
-        "version": TEMPLATE_VERSION,
-        "message": f"Initial seeding complete - {added_count} templates added.",
-        "details": results[:5]  # Show first 5 results for debugging
-    }
 
 @app.get("/fix-user-activity")
 def fix_user_activity():
@@ -233,22 +198,13 @@ def fix_user_activity():
     from sqlalchemy import text
     
     db = SessionLocal()
-    
     try:
-        # SQLite check - see if table exists
         result = db.execute(text("SELECT name FROM sqlite_master WHERE type='table' AND name='user_activities'"))
         table_exists = result.fetchone() is not None
-        
         if table_exists:
-            # Drop the table
             db.execute(text("DROP TABLE user_activities"))
             db.commit()
-            print("✅ Dropped existing user_activities table")
-        
-        # Recreate the table
         UserActivity.__table__.create(engine, checkfirst=True)
-        print("✅ Recreated user_activities table with primary key")
-        
         return {"message": "✅ UserActivity table fixed successfully!"}
     except Exception as e:
         db.rollback()
@@ -265,179 +221,44 @@ def public_categories():
     try:
         from app.database import SessionLocal
         from app.models import Category, Template
-        
         db = SessionLocal()
         categories = db.query(Category).all()
         result = []
         for cat in categories:
-            # Count templates directly from the Template table
             count = db.query(Template).filter(Template.category == cat.name).count()
-            result.append({
-                "name": cat.name,
-                "template_count": count,
-                "id": cat.id
-            })
+            result.append({"name": cat.name, "template_count": count, "id": cat.id})
         db.close()
         return {"categories": result}
     except Exception as e:
         return {"error": str(e)}, 500
-
-@app.get("/add-template-count-column")
-def add_template_count_column():
-    try:
-        from app.database import engine
-        from sqlalchemy import text
-        
-        # Use the engine's connection directly
-        with engine.connect() as conn:
-            # Try to add the column using SQLAlchemy's built-in method
-            try:
-                # For SQLite
-                conn.execute(text("ALTER TABLE categories ADD COLUMN template_count INTEGER DEFAULT 0"))
-                conn.commit()
-                return {"message": "✅ Column added successfully"}
-            except Exception as e:
-                # Check if column already exists
-                result = conn.execute(text("PRAGMA table_info(categories)"))
-                columns = [row[1] for row in result]
-                if 'template_count' in columns:
-                    return {"message": "✅ Column already exists"}
-                else:
-                    return {"error": str(e)}
-    except Exception as e:
-        return {"error": str(e)}
-
-@app.get("/public-categories")
-def public_categories():
-    try:
-        from app.database import SessionLocal
-        from app.models import Category, Template
-        
-        db = SessionLocal()
-        categories = db.query(Category).all()
-        result = []
-        for cat in categories:
-            # Count templates directly from the Template table
-            count = db.query(Template).filter(Template.category == cat.name).count()
-            result.append({
-                "name": cat.name,
-                "template_count": count,
-                "id": cat.id
-            })
-        db.close()
-        return {"categories": result}
-    except Exception as e:
-        return {"error": str(e)}, 500
-
-@app.get("/fix-template-count")
-def fix_template_count():
-    import sqlite3
-    import os
-    
-    try:
-        db_path = os.environ.get('DATABASE_URL', 'gp_notes.db')
-        if db_path and db_path.startswith('sqlite:///'):
-            db_path = db_path.replace('sqlite:///', '')
-        
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-        
-        cursor.execute("PRAGMA table_info(categories)")
-        columns = [row[1] for row in cursor.fetchall()]
-        
-        if 'template_count' not in columns:
-            cursor.execute("ALTER TABLE categories ADD COLUMN template_count INTEGER DEFAULT 0")
-            conn.commit()
-            result = {"message": "✅ Added template_count column"}
-        else:
-            result = {"message": "✅ Column already exists"}
-        
-        conn.close()
-        return result
-    except Exception as e:
-        return {"error": str(e)}
-
-@app.get("/fix-render-db")
-def fix_render_db():
-    import sqlite3
-    import os
-    
-    db_path = os.environ.get('DATABASE_URL', 'gp_notes.db')
-    
-    if db_path and db_path.startswith('sqlite:///'):
-        db_path = db_path.replace('sqlite:///', '')
-    
-    try:
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-        
-        cursor.execute("PRAGMA table_info(categories)")
-        columns = [row[1] for row in cursor.fetchall()]
-        
-        if 'template_count' not in columns:
-            cursor.execute("ALTER TABLE categories ADD COLUMN template_count INTEGER DEFAULT 0")
-            conn.commit()
-            return {"message": "✅ Column added successfully to Render database!"}
-        else:
-            return {"message": "✅ Column already exists!"}
-        
-    except Exception as e:
-        return {"error": str(e)}
-    finally:
-        conn.close()
 
 @app.get("/cleanup-duplicates")
 def cleanup_duplicates():
-    """Remove duplicate templates - keep the one with highest view_count"""
     from app.database import SessionLocal
     from app.models import Template, UserActivity, TemplateVersion, user_favourites
     from sqlalchemy import func
-    
     db = SessionLocal()
-    
     try:
-        # Find duplicate titles
-        duplicates = db.query(
-            Template.title, 
-            func.count(Template.id).label('count')
-        ).group_by(Template.title).having(func.count(Template.id) > 1).all()
-        
+        duplicates = db.query(Template.title, func.count(Template.id).label('count')).group_by(Template.title).having(func.count(Template.id) > 1).all()
         if not duplicates:
             return {"message": "✅ No duplicates found!", "deleted": 0}
-        
         total_deleted = 0
-        results = []
-        
         for title, count in duplicates:
-            copies = db.query(Template).filter(Template.title == title).order_by(
-                Template.view_count.desc(), 
-                Template.updated_at.desc()
-            ).all()
-            
-            keep = copies[0]
-            results.append(f"Title: '{title}' - Keeping ID={keep.id} (views={keep.view_count})")
-            
+            copies = db.query(Template).filter(Template.title == title).order_by(Template.view_count.desc(), Template.updated_at.desc()).all()
             for template in copies[1:]:
-                # Delete related records first
                 db.query(UserActivity).filter(UserActivity.template_id == template.id).delete()
                 db.query(TemplateVersion).filter(TemplateVersion.template_id == template.id).delete()
                 db.execute(user_favourites.delete().where(user_favourites.c.template_id == template.id))
-                
-                # Now delete the template
                 db.delete(template)
-                results.append(f"  Deleted ID={template.id} (views={template.view_count})")
                 total_deleted += 1
-        
         db.commit()
-        return {
-            "message": f"✅ Deleted {total_deleted} duplicate templates",
-            "details": results
-        }
+        return {"message": f"✅ Deleted {total_deleted} duplicate templates"}
     except Exception as e:
         db.rollback()
         return {"error": str(e)}
     finally:
         db.close()
+
 @app.get("/public/templates-with-ids")
 def public_templates_with_ids():
     from app.database import SessionLocal
