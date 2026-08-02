@@ -63,6 +63,7 @@ class Template(Base):
     description = Column(Text)
     category = Column(String(50), nullable=False, index=True)
     content = Column(JSON, nullable=False)
+    clinical_references = Column(Text, nullable=True)
     version = Column(Integer, default=1)
     is_public = Column(Boolean, default=True)
     view_count = Column(Integer, default=0)
