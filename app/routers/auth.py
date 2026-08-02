@@ -21,7 +21,9 @@ limiter = Limiter(key_func=get_remote_address)
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
 @router.post("/token", response_model=Token)
+@limiter.limit("5/minute")
 async def login_for_access_token(
+    request: Request,
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
@@ -54,7 +56,8 @@ async def login(request: Request, user_login: UserLogin, db: Session = Depends(g
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.post("/register", response_model=Token, status_code=status.HTTP_201_CREATED)
-async def register(user: UserCreate, db: Session = Depends(get_db)):
+@limiter.limit("3/hour")
+async def register(request: Request, user: UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(User).filter(User.username == user.username).first()
     if existing_user:
         raise HTTPException(
