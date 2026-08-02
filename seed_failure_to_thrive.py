@@ -7,10 +7,9 @@ def seed_failure_to_thrive():
     title = "Failure to Thrive / Faltering Growth (Children)"
     existing = db.query(Template).filter(Template.title == title).first()
     if existing:
-        db.delete(existing)
-        db.commit()
-    
-    admin = db.query(User).filter(User.role == "admin").first()
+        print(f"⏭️  SKIPPED: {title} already exists (ID={existing.id})")
+        db.close()
+        return
     
     template = Template(
         title=title,

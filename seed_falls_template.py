@@ -52,15 +52,9 @@ def seed_falls_template():
     existing = db.query(Template).filter(Template.title == template_data["title"], Template.created_by == admin.id).first()
     
     if existing:
-        # Update existing template instead of deleting
-        existing.description = t["description"]
-        existing.content = t["content"]
-        existing.category = t["category"]
-        existing.is_public = t["is_public"]
-        existing.updated_at = datetime.now(timezone.utc)
-        db.commit()
-        print(f"🔄 Updated: {t['title']}")
-    new_template = Template(title=template_data["title"], description=template_data["description"], category=template_data["category"], content=template_data["content"], is_public=True, created_by=admin.id, version=1)
+        print(f"⏭️  SKIPPED: {title} already exists (ID={existing.id})")
+        db.close()
+        return
     db.add(new_template); db.commit()
     print(f"Template '{template_data['title']}' created!"); db.close()
 

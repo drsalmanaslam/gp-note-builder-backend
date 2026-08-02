@@ -58,10 +58,9 @@ def seed_abdominal_pain_template():
     existing = db.query(Template).filter(Template.title == template_data["title"], Template.created_by == admin.id).first()
 
 if existing:
-    # Delete existing template (full replacement)
-    db.delete(existing)
-    db.commit()
-    print(f"🗑️ Removed old: {template_data['title']}")
+        print(f"⏭️  SKIPPED: {title} already exists (ID={existing.id})")
+        db.close()
+        return
 
 # Create fresh template
 new_template = Template(title=template_data["title"], description=template_data["description"], category=template_data["category"], content=template_data["content"], is_public=True, created_by=admin.id, version=1)

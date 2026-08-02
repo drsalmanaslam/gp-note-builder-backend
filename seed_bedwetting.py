@@ -13,8 +13,9 @@ def seed_bedwetting():
     title = "Bedwetting / Nocturnal Enuresis (Children)"
     existing = db.query(Template).filter(Template.title == title).first()
     if existing:
-        db.delete(existing)
-        db.commit()
+        print(f"⏭️  SKIPPED: {title} already exists (ID={existing.id})")
+        db.close()
+        return
 
     template = Template(
         title=title,

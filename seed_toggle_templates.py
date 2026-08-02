@@ -80,20 +80,9 @@ def seed_toggle_template():
     existing = db.query(Template).filter(Template.title == template_data["title"]).first()
     
     if existing:
-        # Update existing template instead of deleting
-        existing.description = t["description"]
-        existing.content = t["content"]
-        existing.category = t["category"]
-        existing.is_public = t["is_public"]
-        existing.updated_at = datetime.now(timezone.utc)
-        db.commit()
-        print(f"🔄 Updated: {t['title']}")
-        print(f"🔄 Removed old '{template_data['title']}' template")
-    
-    # Get or create category
-    category = db.query(Category).filter(Category.name == template_data["category"]).first()
-    if not category:
-        category = Category(name=template_data["category"])
+        print(f"⏭️  SKIPPED: {title} already exists (ID={existing.id})")
+        db.close()
+        return
         db.add(category)
         db.commit()
         db.refresh(category)

@@ -604,14 +604,9 @@ def seed_contraception_review():
     ).first()
 
     if existing:
-        existing.description = t["description"]
-        existing.content = t["content"]
-        existing.category = t["category"]
-        existing.is_public = t["is_public"]
-        existing.updated_at = datetime.now(timezone.utc)
-        db.commit()
-        print(f"🔄 Updated: {t['title']}")
-    else:
+        print(f"⏭️  SKIPPED: {title} already exists (ID={existing.id})")
+        db.close()
+        return
         new_t = Template(
             title=t["title"],
             description=t["description"],

@@ -139,14 +139,9 @@ def seed_pcos():
     existing = db.query(Template).filter(Template.title == t["title"], Template.created_by == admin.id).first()
     
     if existing:
-        # Update existing template instead of deleting
-        existing.description = t["description"]
-        existing.content = t["content"]
-        existing.category = t["category"]
-        existing.is_public = t["is_public"]
-        existing.updated_at = datetime.now(timezone.utc)
-        db.commit()
-        print(f"🔄 Updated: {t['title']}")
+        print(f"⏭️  SKIPPED: {title} already exists (ID={existing.id})")
+        db.close()
+        return
     new_t = Template(title=t["title"], description=t["description"], category=t["category"], content=t["content"], is_public=True, created_by=admin.id, version=1)
     db.add(new_t); db.commit()
     print(f"Template '{t['title']}' created with {len(t['content']['sections'])} sections!"); db.close()

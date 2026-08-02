@@ -13,8 +13,9 @@ def seed_eating_disorder():
     title = "Eating Disorder Assessment (SCOFF)"
     existing = db.query(Template).filter(Template.title == title).first()
     if existing:
-        db.delete(existing)
-        db.commit()
+        print(f"⏭️  SKIPPED: {title} already exists (ID={existing.id})")
+        db.close()
+        return
 
     template = Template(
         title=title,

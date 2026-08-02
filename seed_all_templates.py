@@ -265,25 +265,9 @@ def seed_all_templates():
         ).first()
         
         if existing:
-            # Update existing template instead of deleting
-            existing.description = template_data["description"]
-            existing.content = template_data["content"]
-            existing.category = template_data["category"]
-            existing.is_public = template_data["is_public"]
-            existing.updated_at = datetime.now(timezone.utc)
-            db.commit()
-            print(f"🔄 Updated: '{template_data['title']}'")
-        else:
-            # Create template with proper structure
-            new_template = Template(
-                title=template_data["title"],
-                description=template_data["description"],
-                category=template_data["category"],
-                content=template_data["content"],
-                is_public=template_data["is_public"],
-                created_by=admin.id,
-                version=1
-            )
+        print(f"⏭️  SKIPPED: {title} already exists (ID={existing.id})")
+        db.close()
+        return
             db.add(new_template)
             db.commit()
             db.refresh(new_template)

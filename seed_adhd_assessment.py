@@ -7,10 +7,9 @@ def seed_adhd_assessment():
     title = "ADHD Assessment (Adult)"
     existing = db.query(Template).filter(Template.title == title).first()
     if existing:
-        db.delete(existing)
-        db.commit()
-    
-    admin = db.query(User).filter(User.role == "admin").first()
+        print(f"⏭️  SKIPPED: {title} already exists (ID={existing.id})")
+        db.close()
+        return
     
     template = Template(
         title=title,
