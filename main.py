@@ -268,3 +268,22 @@ def public_templates_with_ids():
     result = [{"id": t.id, "title": t.title, "category": t.category} for t in templates]
     db.close()
     return {"data": result, "total": len(result)}
+
+@app.get("/add-references-urti")
+def add_references_urti():
+    import json
+    from app.database import SessionLocal
+    from app.models import Template
+    db = SessionLocal()
+    t = db.query(Template).filter(Template.id == 841).first()
+    if t:
+        t.clinical_references = json.dumps([
+            {"label": "HSE URTI Guidelines", "url": "https://www.hse.ie/eng/health/az/u/upper-respiratory-tract-infection/"},
+            {"label": "NICE NG120 - Cough (Acute)", "url": "https://www.nice.org.uk/guidance/ng120"},
+            {"label": "Heidi Evidence - URTI", "url": "https://app.heidi-app.com/search?q=URTI"}
+        ])
+        db.commit()
+        db.close()
+        return {"message": "✅ References added to URTI (ID 841)"}
+    db.close()
+    return {"error": "Template not found"}
