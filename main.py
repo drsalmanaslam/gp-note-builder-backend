@@ -41,7 +41,7 @@ else:
 # Ensure admin has lifetime access
 from app.database import SessionLocal
 from app.models import User
-from app.auth import get_password_hash
+from app.auth import get_password_hash, get_current_admin
 db = SessionLocal()
 
 import os
@@ -126,18 +126,17 @@ def health_check():
     return {"status": "healthy", "server": "running"}
 
 @app.get("/seed-all")
-def seed_all():
+def seed_all(current_user: User = Depends(get_current_admin)):
+    """Admin only: Seed new templates that don't exist. Never overwrites existing."""
     import importlib
     import os
     results = []
     
-    # Get all seed files
     seed_files = sorted([f.replace('.py', '') for f in os.listdir('.') if f.startswith('seed_') and f.endswith('.py')])
     
     for seed_name in seed_files:
         try:
             mod = importlib.import_module(seed_name)
-            # Find the seed function (usually starts with seed_)
             for attr in dir(mod):
                 if attr.startswith('seed_') and callable(getattr(mod, attr)):
                     getattr(mod, attr)()
@@ -180,25 +179,22 @@ def template_version():
     return {"version": TEMPLATE_VERSION, "total_templates": 107}
 
 @app.get("/api/sync-templates")
-def sync_templates():
+def sync_templates(current_user: User = Depends(get_current_admin)):
+    """Admin only: Add new templates only. Never updates existing ones."""
     import importlib, os
     global TEMPLATE_VERSION
     from app.database import SessionLocal
     from app.models import Template
-    from datetime import datetime, timezone
     
     db = SessionLocal()
-    
-    # Get existing template titles - ONLY sync if no templates exist (first run)
     existing_count = db.query(Template).count()
+    db.close()
     
-    if existing_count > 0:
-        db.close()
-        return {
-            "synced": 0,
-            "version": TEMPLATE_VERSION,
-            "message": f"✅ {existing_count} templates already exist. Skipping sync to preserve edits."
-        }
+    return {
+        "synced": 0,
+        "version": TEMPLATE_VERSION,
+        "message": f"✅ {existing_count} templates in database. Use /seed-all to add new templates."
+    }
     
     print(f"📊 No templates found. Running initial seed...")
     

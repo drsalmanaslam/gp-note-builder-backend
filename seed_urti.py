@@ -130,7 +130,7 @@ def seed_urti():
                         "type": "single_select", 
                         "label": "Clinical Impression", 
                         "required": True, 
-                        "options": ["Viral URTI", "COVID 19", "Community Acquired Pneumonia", "Acute bronchitis", "Asthma exacerbation", "Influenza", "Allergic Rhinitis", "Sinusitis",],
+                        "options": ["Viral URTI", "COVID 19", "Community Acquired Pneumonia", "Acute bronchitis", "Asthma exacerbation", "Influenza", "Allergic Rhinitis", "Sinusitis"],
                         "output_phrase": "Diagnosis: {value}"
                     }
                 ]
