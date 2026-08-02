@@ -269,6 +269,18 @@ def public_templates_with_ids():
     db.close()
     return {"data": result, "total": len(result)}
 
+@app.get("/add-references-column-render")
+def add_references_column_render():
+    from app.database import engine
+    from sqlalchemy import text
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS clinical_references TEXT"))
+            conn.commit()
+        return {"message": "✅ clinical_references column added on Render"}
+    except Exception as e:
+        return {"error": str(e)}
+
 @app.get("/add-references-urti")
 def add_references_urti():
     import json
