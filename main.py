@@ -11,6 +11,15 @@ import os
 
 # Create tables
 Base.metadata.create_all(bind=engine)
+# Ensure clinical_references column exists on Render PostgreSQL
+from sqlalchemy import text
+try:
+    with engine.connect() as conn:
+        conn.execute(text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS clinical_references TEXT"))
+        conn.commit()
+        print("✅ clinical_references column ready")
+except Exception as e:
+    print(f"Column check (non-critical): {e}")
 
 # Auto-seed templates on first startup (only if database is empty)
 from app.database import SessionLocal
