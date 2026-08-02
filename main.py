@@ -43,12 +43,18 @@ from app.database import SessionLocal
 from app.models import User
 from app.auth import get_password_hash
 db = SessionLocal()
-admin = db.query(User).filter(User.username == "gpclinicaldirector@notebuilder").first()
+
+import os
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "gpclinicaldirector@notebuilder")
+ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "admin@gpnotebuilder.com")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "@GPLenovo!notes")
+
+admin = db.query(User).filter(User.username == ADMIN_USERNAME).first()
 if not admin:
     admin = User(
-        username="gpclinicaldirector@notebuilder",
-        email="admin@gpnotebuilder.com",
-        hashed_password=get_password_hash("@GPLenovo!notes"),
+        username=ADMIN_USERNAME,
+        email=ADMIN_EMAIL,
+        hashed_password=get_password_hash(ADMIN_PASSWORD),
         role="admin",
         is_active=True,
         subscription_status="active",
@@ -59,7 +65,7 @@ else:
     admin.role = "admin"
     admin.subscription_status = "active"
     admin.subscription_plan = "enterprise"
-    admin.hashed_password = get_password_hash("@GPLenovo!notes")
+    admin.hashed_password = get_password_hash(ADMIN_PASSWORD)
 db.commit()
 db.close()
 
