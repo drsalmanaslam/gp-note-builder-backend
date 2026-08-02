@@ -80,7 +80,6 @@ app.add_middleware(
         "https://*.vercel.app",
         "http://localhost:3000",
         "http://localhost:5173",
-        "*"  # For testing only - remove in production
     ],
     allow_credentials=True,
     allow_methods=["*"],
