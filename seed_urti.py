@@ -28,7 +28,7 @@ def seed_urti():
                     {
                         "id": "urti_presenting_complaint", 
                         "type": "text", 
-                        "label": "Presenting Complaint", 
+                        "label": "Presentation", 
                         "required": True, 
                         "placeholder": "e.g., Cough and runny nose for 2 days",
                         "output_phrase": "c/o: {value}"
@@ -36,7 +36,7 @@ def seed_urti():
                     {
                         "id": "urti_duration", 
                         "type": "text", 
-                        "label": "Duration of Symptoms", 
+                        "label": "Duration", 
                         "required": True, 
                         "placeholder": "e.g., 2 days",
                         "output_phrase": "Duration: {value}"
@@ -44,17 +44,17 @@ def seed_urti():
                     {
                         "id": "urti_main_symptom", 
                         "type": "single_select", 
-                        "label": "Presenting Symptom", 
+                        "label": "Associations", 
                         "required": True, 
-                        "options": ["Cough", "Sore throat", "Nasal congestion / coryza", "Fever", "Malaise / fatigue"],
-                        "output_phrase": "Associated symptoms: {value}"  # 👈 CHANGED THIS
+                        "options": ["Cough", "Sore throat", "Wheeze", "Nasal congestion / coryza", "Fever", "Malaise / fatigue"],
+                        "output_phrase": "Associated symptoms: {value}" 
                     },
                     {
                         "id": "urti_red_flags", 
                         "type": "multi_select", 
-                        "label": "Respiratory Red Flag Screen", 
+                        "label": "Red Flags", 
                         "required": True, 
-                        "options": ["Shortness of breath", "Wheeze", "Chest pain", "Haemoptysis", "None present"], 
+                        "options": ["Shortness of breath", "Chest pain", "Haemoptysis", "None present"], 
                         "is_red_flag": True, 
                         "red_flag_positive": "RED FLAG: SOB/wheeze/chest pain/haemoptysis = ?LRTI, pneumonia, PE. Examine + consider CXR.", 
                         "red_flag_negative": "",
@@ -86,14 +86,6 @@ def seed_urti():
                 "section_type": "examination",
                 "questions": [
                     {
-                        "id": "urti_vitals", 
-                        "type": "text", 
-                        "label": "Vital Signs", 
-                        "required": True, 
-                        "placeholder": "e.g., Temp 36.9°C, HR 75, SpO2 99%",
-                        "output_phrase": "Vitals: {value}"
-                    },
-                    {
                         "id": "urti_resp", 
                         "type": "single_select", 
                         "label": "Respiratory Examination", 
@@ -123,11 +115,11 @@ def seed_urti():
                 "title": "Assessment",
                 "section_type": "assessment",
                 "differentials": [
-                    "Viral URTI (most common - self-limiting 7-10 days)",
+                    "Viral URTI (Self limiting upto 10 days)",
                     "Acute Bronchitis",
-                    "Community-Acquired Pneumonia (RED FLAG - crackles, fever, SOB)",
+                    "Community Acquired Pneumonia",
                     "Infective Exacerbation of Asthma",
-                    "COVID-19",
+                    "COVID 19",
                     "Influenza",
                     "Allergic Rhinitis",
                     "Sinusitis"
@@ -138,7 +130,7 @@ def seed_urti():
                         "type": "single_select", 
                         "label": "Clinical Impression", 
                         "required": True, 
-                        "options": ["Viral URTI", "Lower respiratory tract infection suspected", "Acute bronchitis", "Asthma exacerbation", "Alternative diagnosis"],
+                        "options": ["Viral URTI", "COVID 19", "Community Acquired Pneumonia", "Acute bronchitis", "Asthma exacerbation", "Influenza", "Allergic Rhinitis", "Sinusitis",],
                         "output_phrase": "Diagnosis: {value}"
                     }
                 ]
