@@ -142,9 +142,8 @@ def update_template(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user)
 ):
-    """Update a template"""
+    """Update a template - admin only. Never overwrites content with empty data."""
     try:
-        # Get template - ADD THIS to check for deleted templates
         db_template = db.query(Template).filter(
             Template.id == template_id,
             Template.deleted_at.is_(None)
@@ -153,67 +152,55 @@ def update_template(
         if not db_template:
             raise HTTPException(status_code=404, detail="Template not found")
         
-        # PERMISSION CHECK - UPDATE THIS to use admin email
         ADMIN_EMAIL = "gpclinicaldirector@notebuilder"
         is_admin = current_user.role == "admin" or current_user.email == ADMIN_EMAIL
         
         if db_template.created_by != current_user.id and not is_admin:
             raise HTTPException(status_code=403, detail="Access denied - you don't own this template")
         
-        # Track what's being changed for logging
         changes = []
         
-        # Save version history if content is changing
-        if template_update.content is not None and template_update.content != db_template.content:
-            version = TemplateVersion(
-                template_id=db_template.id,
-                version=db_template.version + 1,
-                content=db_template.content,
-                changes="Updated content"
-            )
-            db.add(version)
-            db_template.version += 1
-            changes.append("content")
+        # Update content - ONLY if it contains actual sections
+        if template_update.content is not None:
+            new_content = template_update.content
+            if isinstance(new_content, dict):
+                sections = new_content.get('sections', [])
+                if len(sections) > 0 and new_content != db_template.content:
+                    version = TemplateVersion(
+                        template_id=db_template.id,
+                        version=db_template.version + 1,
+                        content=db_template.content,
+                        changes="Updated content"
+                    )
+                    db.add(version)
+                    db_template.version += 1
+                    db_template.content = new_content
+                    changes.append("content")
         
-        # Update fields
         if template_update.title is not None:
-            old_title = db_template.title
-            db_template.title = template_update.title
-            if old_title != template_update.title:
+            if db_template.title != template_update.title:
+                db_template.title = template_update.title
                 changes.append("title")
                 
         if template_update.description is not None:
-            old_desc = db_template.description
-            db_template.description = template_update.description
-            if old_desc != template_update.description:
+            if db_template.description != template_update.description:
+                db_template.description = template_update.description
                 changes.append("description")
                 
         if template_update.category is not None:
-            old_cat = db_template.category
-            db_template.category = template_update.category
-            if old_cat != template_update.category:
+            if db_template.category != template_update.category:
+                db_template.category = template_update.category
                 changes.append("category")
                 
-        if template_update.content is not None:
-            old_content = db_template.content
-            db_template.content = template_update.content
-            if old_content != template_update.content:
-                changes.append("content")
-                
         if template_update.is_public is not None:
-            old_public = db_template.is_public
-            db_template.is_public = template_update.is_public
-            if old_public != template_update.is_public:
+            if db_template.is_public != template_update.is_public:
+                db_template.is_public = template_update.is_public
                 changes.append("is_public")
         
-        # Update timestamp
         db_template.updated_at = datetime.now(timezone.utc)
-        
-        # Commit changes
         db.commit()
         db.refresh(db_template)
         
-        # Log activity
         if changes:
             activity = UserActivity(
                 user_id=current_user.id,
