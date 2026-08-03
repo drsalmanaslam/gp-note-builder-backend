@@ -113,6 +113,7 @@ class TemplateBase(BaseModel):
     category: str
     content: dict
     is_public: bool = True
+    clinical_references: Optional[str] = None
     red_flags: Optional[List[dict]] = []  # NEW
 
 class TemplateResponse(TemplateBase):
@@ -126,6 +127,7 @@ class TemplateResponse(TemplateBase):
     is_favourite: bool = False
     category_id: Optional[int] = None
     category_details: Optional[CategoryResponse] = None
+    clinical_references: Optional[str] = None
     
     class Config:
         from_attributes = True
