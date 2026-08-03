@@ -80,6 +80,7 @@ class TemplateUpdate(BaseModel):
     category: Optional[str] = None
     content: Optional[dict] = None
     is_public: Optional[bool] = None
+    clinical_references: Optional[str] = None
 
 class TemplateResponse(TemplateBase):
     id: int
