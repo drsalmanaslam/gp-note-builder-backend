@@ -196,6 +196,11 @@ def update_template(
             if db_template.is_public != template_update.is_public:
                 db_template.is_public = template_update.is_public
                 changes.append("is_public")
+
+        if template_update.clinical_references is not None:
+            if db_template.clinical_references != template_update.clinical_references:
+                db_template.clinical_references = template_update.clinical_references
+                changes.append("clinical_references")
         
         db_template.updated_at = datetime.now(timezone.utc)
         db.commit()
