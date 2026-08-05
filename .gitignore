@@ -2,3 +2,5 @@ venv/
 __pycache__/ 
 *.pyc 
 "gp_notes.db" 
+__pycache__ 
+*.db 
