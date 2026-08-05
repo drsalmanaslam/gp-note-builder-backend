@@ -8,6 +8,14 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from app.routers import users, products, items, auth, templates, password_reset
 from app.database import engine, Base
 import os
+import sys
+import traceback
+
+# Global error handler to prevent silent crashes
+sys.excepthook = lambda t, v, tb: print(''.join(traceback.format_exception(t, v, tb)), file=sys.stderr)
+
+# Create tables
+Base.metadata.create_all(bind=engine)
 
 # Create tables
 Base.metadata.create_all(bind=engine)
