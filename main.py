@@ -252,6 +252,31 @@ def cleanup_duplicates():
     finally:
         db.close()
 
+@app.get("/admin/backup-templates")
+def backup_templates(current_user: User = Depends(get_current_admin)):
+    """Admin: Download all templates as JSON backup."""
+    from app.database import SessionLocal
+    from app.models import Template
+    import json
+    
+    db = SessionLocal()
+    templates = db.query(Template).filter(Template.is_public == True).all()
+    
+    backup = []
+    for t in templates:
+        backup.append({
+            "id": t.id,
+            "title": t.title,
+            "description": t.description,
+            "category": t.category,
+            "content": t.content,
+            "is_public": t.is_public,
+            "version": t.version
+        })
+    
+    db.close()
+    return {"backup_date": datetime.now(timezone.utc).isoformat(), "total": len(backup), "templates": backup}
+
 @app.get("/public/templates-with-ids")
 def public_templates_with_ids():
     from app.database import SessionLocal
