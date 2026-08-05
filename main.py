@@ -6,7 +6,9 @@ from app.routers import categories, notes
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 from app.routers import users, products, items, auth, templates, password_reset
-from app.database import engine, Base
+from app.auth import get_current_admin
+from app.models import User
+
 import os
 import sys
 import traceback
@@ -14,61 +16,53 @@ import traceback
 # Global error handler to prevent silent crashes
 sys.excepthook = lambda t, v, tb: print(''.join(traceback.format_exception(t, v, tb)), file=sys.stderr)
 
-# Create tables
-Base.metadata.create_all(bind=engine)
-
-# Create tables
-Base.metadata.create_all(bind=engine)
-# Ensure clinical_references column exists on Render PostgreSQL
-from sqlalchemy import text
-try:
-    with engine.connect() as conn:
-        conn.execute(text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS clinical_references TEXT"))
-        conn.commit()
-        print("✅ clinical_references column ready")
-except Exception as e:
-    print(f"Column check (non-critical): {e}")
-
-from app.database import SessionLocal
-from app.models import Template, User
-from app.auth import get_password_hash, get_current_admin
-import importlib
-
-# Auto-seed disabled on production to prevent startup crash.
-# Use /seed-all endpoint after deployment to add new templates.
-print("Auto-seed skipped. Use /seed-all endpoint to add new templates.")
-# Ensure admin has lifetime access
-db = SessionLocal()
-
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "gpclinicaldirector@notebuilder")
-ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "admin@gpnotebuilder.com")
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "@GPLenovo!notes")
-
-admin = db.query(User).filter(User.username == ADMIN_USERNAME).first()
-if not admin:
-    admin = User(
-        username=ADMIN_USERNAME,
-        email=ADMIN_EMAIL,
-        hashed_password=get_password_hash(ADMIN_PASSWORD),
-        role="admin",
-        is_active=True,
-        subscription_status="active",
-        subscription_plan="enterprise"
-    )
-    db.add(admin)
-else:
-    admin.role = "admin"
-    admin.subscription_status = "active"
-    admin.subscription_plan = "enterprise"
-    admin.hashed_password = get_password_hash(ADMIN_PASSWORD)
-db.commit()
-db.close()
+# DB setup moved to startup event
 
 app = FastAPI(
     title="GP Project API",
     description="My awesome API with Authentication",
     version="1.0.0"
 )
+
+@app.on_event("startup")
+async def startup_event():
+    from app.database import engine, SessionLocal
+    from app.models import User
+    from app.auth import get_password_hash
+    from sqlalchemy import text
+    
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS clinical_references TEXT"))
+            conn.commit()
+            print("✅ clinical_references column ready")
+    except Exception as e:
+        print(f"Column check (non-critical): {e}")
+    
+    ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "gpclinicaldirector@notebuilder")
+    ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "@GPLenovo!notes")
+    
+    db = SessionLocal()
+    admin = db.query(User).filter(User.username == ADMIN_USERNAME).first()
+    if not admin:
+        admin = User(
+            username=ADMIN_USERNAME,
+            email=os.getenv("ADMIN_EMAIL", "admin@gpnotebuilder.com"),
+            hashed_password=get_password_hash(ADMIN_PASSWORD),
+            role="admin",
+            is_active=True,
+            subscription_status="active",
+            subscription_plan="enterprise"
+        )
+        db.add(admin)
+    else:
+        admin.role = "admin"
+        admin.subscription_status = "active"
+        admin.subscription_plan = "enterprise"
+        admin.hashed_password = get_password_hash(ADMIN_PASSWORD)
+    db.commit()
+    db.close()
+    print("✅ Startup complete")
 
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
