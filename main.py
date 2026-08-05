@@ -41,6 +41,7 @@ if existing_templates == 0:
                 if attr.startswith('seed_') and callable(getattr(mod, attr)):
                     getattr(mod, attr)()
                     break
+            import time; time.sleep(0.5)  # Prevent connection pool exhaustion
         except Exception as e:
             print(f"❌ {seed_name}: {str(e)[:50]}")
     print("Auto-seeding complete!")
