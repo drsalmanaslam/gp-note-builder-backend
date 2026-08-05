@@ -21,10 +21,14 @@ try:
 except Exception as e:
     print(f"Column check (non-critical): {e}")
 
+from app.database import SessionLocal
+from app.models import Template, User
+from app.auth import get_password_hash, get_current_admin
+import importlib
+
 # Auto-seed disabled on production to prevent startup crash.
 # Use /seed-all endpoint after deployment to add new templates.
 print("Auto-seed skipped. Use /seed-all endpoint to add new templates.")
-
 # Ensure admin has lifetime access
 db = SessionLocal()
 
