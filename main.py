@@ -21,32 +21,9 @@ try:
 except Exception as e:
     print(f"Column check (non-critical): {e}")
 
-# Auto-seed templates on first startup (only if database is empty)
-from app.database import SessionLocal
-from app.models import Template, User
-from app.auth import get_password_hash, get_current_admin
-import importlib
-
-db_check = SessionLocal()
-existing_templates = db_check.query(Template).count()
-db_check.close()
-
-if existing_templates == 0:
-    print("No templates found. Auto-seeding all templates...")
-    seed_files = sorted([f.replace('.py', '') for f in os.listdir('.') if f.startswith('seed_') and f.endswith('.py')])
-    for seed_name in seed_files:
-        try:
-            mod = importlib.import_module(seed_name)
-            for attr in dir(mod):
-                if attr.startswith('seed_') and callable(getattr(mod, attr)):
-                    getattr(mod, attr)()
-                    break
-            import time; time.sleep(0.5)  # Prevent connection pool exhaustion
-        except Exception as e:
-            print(f"❌ {seed_name}: {str(e)[:50]}")
-    print("Auto-seeding complete!")
-else:
-    print(f"{existing_templates} templates already exist. Skipping seed.")
+# Auto-seed disabled on production to prevent startup crash.
+# Use /seed-all endpoint after deployment to add new templates.
+print("Auto-seed skipped. Use /seed-all endpoint to add new templates.")
 
 # Ensure admin has lifetime access
 db = SessionLocal()
