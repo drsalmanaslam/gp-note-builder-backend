@@ -252,6 +252,45 @@ def cleanup_duplicates():
     finally:
         db.close()
 
+
+@app.get("/merge-categories")
+def merge_categories(current_user: User = Depends(get_current_admin)):
+    """Admin: Merge duplicate categories into standard names."""
+    from app.database import SessionLocal
+    from app.models import Template, Category
+    
+    db = SessionLocal()
+    merges = {
+        "Gastrointestinal": "Gastroenterology",
+        "Eye": "Ophthalmology",
+        "Elderly Care": "Geriatrics",
+    }
+    
+    results = []
+    for old_name, new_name in merges.items():
+        old_cat = db.query(Category).filter(Category.name == old_name).first()
+        new_cat = db.query(Category).filter(Category.name == new_name).first()
+        
+        if not old_cat:
+            results.append(f"⏭️ {old_name} not found")
+            continue
+        
+        if not new_cat:
+            new_cat = Category(name=new_name)
+            db.add(new_cat)
+            db.commit()
+        
+        count = db.query(Template).filter(Template.category == old_name).update(
+            {Template.category: new_name}
+        )
+        
+        db.delete(old_cat)
+        db.commit()
+        results.append(f"✅ {count} templates: {old_name} -> {new_name}")
+    
+    db.close()
+    return {"results": results}
+
 @app.get("/admin/backup-templates")
 def backup_templates(current_user: User = Depends(get_current_admin)):
     """Admin: Download all templates as JSON backup."""
