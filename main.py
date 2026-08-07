@@ -26,6 +26,11 @@ app = FastAPI(
 
 @app.on_event("startup")
 async def startup_event():
+    import asyncio
+    # Run DB setup in background so port binds immediately
+    asyncio.create_task(setup_database())
+
+async def setup_database():
     from app.database import engine, SessionLocal
     from app.models import User
     from app.auth import get_password_hash
@@ -43,27 +48,28 @@ async def startup_event():
     ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "@GPLenovo!notes")
     
     db = SessionLocal()
-    admin = db.query(User).filter(User.username == ADMIN_USERNAME).first()
-    if not admin:
-        admin = User(
-            username=ADMIN_USERNAME,
-            email=os.getenv("ADMIN_EMAIL", "admin@gpnotebuilder.com"),
-            hashed_password=get_password_hash(ADMIN_PASSWORD),
-            role="admin",
-            is_active=True,
-            subscription_status="active",
-            subscription_plan="enterprise"
-        )
-        db.add(admin)
-    else:
-        admin.role = "admin"
-        admin.subscription_status = "active"
-        admin.subscription_plan = "enterprise"
-        admin.hashed_password = get_password_hash(ADMIN_PASSWORD)
-    db.commit()
-    db.close()
+    try:
+        admin = db.query(User).filter(User.username == ADMIN_USERNAME).first()
+        if not admin:
+            admin = User(
+                username=ADMIN_USERNAME,
+                email=os.getenv("ADMIN_EMAIL", "admin@gpnotebuilder.com"),
+                hashed_password=get_password_hash(ADMIN_PASSWORD),
+                role="admin",
+                is_active=True,
+                subscription_status="active",
+                subscription_plan="enterprise"
+            )
+            db.add(admin)
+        else:
+            admin.role = "admin"
+            admin.subscription_status = "active"
+            admin.subscription_plan = "enterprise"
+            admin.hashed_password = get_password_hash(ADMIN_PASSWORD)
+        db.commit()
+    finally:
+        db.close()
     print("✅ Startup complete")
-
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
