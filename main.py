@@ -251,6 +251,7 @@ def merge_categories(current_user: User = Depends(get_current_admin)):
     db.close()
     return {"results": results}
 
+
 @app.get("/admin/backup-templates")
 def backup_templates(current_user: User = Depends(get_current_admin)):
     """Admin: Download all templates as JSON backup."""
