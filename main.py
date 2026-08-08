@@ -24,18 +24,13 @@ app = FastAPI(
     version="1.0.0"
 )
 
-@app.on_event("startup")
-async def startup_event():
-    import asyncio
-    # Run DB setup in background so port binds immediately
-    asyncio.create_task(setup_database())
 
 async def setup_database():
     from app.database import engine, SessionLocal
     from app.models import User
     from app.auth import get_password_hash
     from sqlalchemy import text
-    
+
     try:
         with engine.connect() as conn:
             conn.execute(text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS clinical_references TEXT"))
@@ -70,6 +65,12 @@ async def setup_database():
     finally:
         db.close()
     print("✅ Startup complete")
+
+@app.on_event("startup")
+async def startup_event():
+    import asyncio
+    asyncio.create_task(setup_database())
+
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
