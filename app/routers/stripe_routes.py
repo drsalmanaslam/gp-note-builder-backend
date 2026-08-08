@@ -24,7 +24,12 @@ def create_checkout_session(
 ):
     """Create a Stripe checkout session for subscription."""
     try:
-        stripe_price_id = os.getenv("STRIPE_PRICE_BASIC", "price_1TpDI5CmqKOObHdxS6A8HAOn")
+        # Map price_id to actual Stripe price
+        price_map = {
+            "price_1U27pm9glkt3BcvLDIVC7N3V": os.getenv("STRIPE_PRICE_BASIC", "price_1U27pm9glkt3BcvLDIVC7N3V"),
+            "price_1U27rO9glkt3BcvLJ1vY8G9Z": os.getenv("STRIPE_PRICE_PRO", "price_1U27rO9glkt3BcvLJ1vY8G9Z"),
+        }
+        stripe_price_id = price_map.get(price_id, price_map["price_1U27pm9glkt3BcvLDIVC7N3V"])
 
         session = stripe.checkout.Session.create(
             customer_email=current_user.email,
@@ -38,7 +43,6 @@ def create_checkout_session(
                 "trial_period_days": 14,
             },
             success_url="https://gp-project-ruddy.vercel.app/login?subscribed=true",
-
             cancel_url="https://gp-project-ruddy.vercel.app/pricing",
         )
         
@@ -46,7 +50,6 @@ def create_checkout_session(
     
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-
 
 # ============ CUSTOMER PORTAL ============
 
