@@ -24,53 +24,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-
-async def setup_database():
-    from app.database import engine, SessionLocal
-    from app.models import User
-    from app.auth import get_password_hash
-    from sqlalchemy import text
-
-    try:
-        with engine.connect() as conn:
-            conn.execute(text("ALTER TABLE templates ADD COLUMN IF NOT EXISTS clinical_references TEXT"))
-            conn.commit()
-            print("✅ clinical_references column ready")
-    except Exception as e:
-        print(f"Column check (non-critical): {e}")
-    
-    ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "gpclinicaldirector@notebuilder")
-    ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "@GPLenovo!notes")
-    
-    db = SessionLocal()
-    try:
-        admin = db.query(User).filter(User.username == ADMIN_USERNAME).first()
-        if not admin:
-            admin = User(
-                username=ADMIN_USERNAME,
-                email=os.getenv("ADMIN_EMAIL", "admin@gpnotebuilder.com"),
-                hashed_password=get_password_hash(ADMIN_PASSWORD),
-                role="admin",
-                is_active=True,
-                subscription_status="active",
-                subscription_plan="enterprise"
-            )
-            db.add(admin)
-        else:
-            admin.role = "admin"
-            admin.subscription_status = "active"
-            admin.subscription_plan = "enterprise"
-            admin.hashed_password = get_password_hash(ADMIN_PASSWORD)
-        db.commit()
-    finally:
-        db.close()
-    print("✅ Startup complete")
-
-@app.on_event("startup")
-async def startup_event():
-    import asyncio
-    asyncio.create_task(setup_database())
-
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
