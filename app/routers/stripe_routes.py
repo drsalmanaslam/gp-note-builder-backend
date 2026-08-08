@@ -37,9 +37,9 @@ def create_checkout_session(
             subscription_data={
                 "trial_period_days": 7,
             },
-            success_url="http://localhost:5173/login?subscribed=true",
+            success_url="https://gp-project-ruddy.vercel.app/login?subscribed=true",
 
-            cancel_url="http://localhost:5173/pricing",
+            cancel_url="https://gp-project-ruddy.vercel.app/pricing",
         )
         
         return {"url": session.url}
@@ -62,7 +62,7 @@ def customer_portal(
     try:
         session = stripe.billing_portal.Session.create(
             customer=current_user.stripe_customer_id,
-            return_url="http://localhost:5173/profile",
+            return_url="https://gp-project-ruddy.vercel.app/profile",
         )
         return {"url": session.url}
     except Exception as e:

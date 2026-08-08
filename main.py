@@ -5,9 +5,10 @@ from slowapi.errors import RateLimitExceeded
 from app.routers import categories, notes
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
-from app.routers import users, products, items, auth, templates, password_reset
+from app.routers import users, products, items, auth, templates, password_reset, stripe_routes
 from app.auth import get_current_admin
 from app.models import User
+from app.routers import stripe_routes
 
 import os
 import sys
@@ -66,6 +67,7 @@ app.include_router(templates.router)
 app.include_router(notes.router)
 app.include_router(categories.router)
 app.include_router(password_reset.router)
+app.include_router(stripe_routes.router)
 
 @app.get("/")
 def read_root():
