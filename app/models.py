@@ -19,6 +19,7 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String(50), unique=True, index=True, nullable=False)
     email = Column(String(100), unique=True, index=True, nullable=False)
+    imc_number = Column(String(20), unique=True, nullable=True)
     full_name = Column(String(100))
     hashed_password = Column(String(255), nullable=False)
     is_active = Column(Boolean, default=True)
@@ -38,7 +39,7 @@ class User(Base):
     
     def __repr__(self):
         return f"<User(id={self.id}, username='{self.username}', email='{self.email}')>"
-
+	
 class Category(Base):
     __tablename__ = "categories"
     

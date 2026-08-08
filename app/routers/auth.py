@@ -78,13 +78,14 @@ async def register(request: Request, user: UserCreate, db: Session = Depends(get
     username=user.username,
     email=user.email,
     full_name=user.full_name,
+    imc_number=user.imc_number,
     hashed_password=hashed_password,
     is_active=True,
     role="user",
     subscription_status="trialing",
     subscription_plan="basic",
     subscription_started=datetime.now(timezone.utc),
-    subscription_expires=datetime.now(timezone.utc) + timedelta(days=30)
+    subscription_expires=datetime.now(timezone.utc) + timedelta(days=14)
 )
     
     db.add(db_user)

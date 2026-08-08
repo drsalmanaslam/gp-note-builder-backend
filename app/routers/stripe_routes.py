@@ -35,7 +35,7 @@ def create_checkout_session(
                 "quantity": 1,
             }],
             subscription_data={
-                "trial_period_days": 7,
+                "trial_period_days": 14,
             },
             success_url="https://gp-project-ruddy.vercel.app/login?subscribed=true",
 
