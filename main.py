@@ -19,6 +19,18 @@ sys.excepthook = lambda t, v, tb: print(''.join(traceback.format_exception(t, v,
 
 # DB setup moved to startup event
 
+@app.get("/add-imc-column")
+def add_imc_column():
+    from app.database import engine
+    from sqlalchemy import text
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("ALTER TABLE users ADD COLUMN IF NOT EXISTS imc_number VARCHAR(20)"))
+            conn.commit()
+        return {"message": "✅ IMC column added"}
+    except Exception as e:
+        return {"error": str(e)}
+
 app = FastAPI(
     title="GP Project API",
     description="My awesome API with Authentication",
