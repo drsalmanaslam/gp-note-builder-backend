@@ -145,9 +145,11 @@ def test_activate_subscription(
     db: Session = Depends(get_db)
 ):
     """DEVELOPMENT ONLY: Manually activate subscription for testing."""
+    from datetime import timedelta
     current_user.subscription_status = "trialing"
     current_user.stripe_customer_id = "cus_test_" + str(current_user.id)
     current_user.stripe_subscription_id = "sub_test_" + str(current_user.id)
     current_user.subscription_started = datetime.now(timezone.utc)
+    current_user.subscription_expires = datetime.now(timezone.utc) + timedelta(days=14)
     db.commit()
-    return {"message": "Subscription activated (test mode)", "status": current_user.subscription_status}
+    return {"message": "Subscription activated (test mode)", "status": current_user.subscription_status, "expires": current_user.subscription_expires.isoformat()}
