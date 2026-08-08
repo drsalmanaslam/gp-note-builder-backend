@@ -18,6 +18,7 @@ class UserResponse(BaseModel):
     is_active: bool = True
     role: str = 'user'
     subscription_status: Optional[str] = 'inactive'
+    subscription_expires: Optional[datetime] = None
     created_at: Optional[datetime] = None
     
     class Config:
